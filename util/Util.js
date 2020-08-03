@@ -8,6 +8,18 @@ const util = {
 	getUserId() {
 		return this.getSession('userId') || '';
 	},
+	setObtainedStatus(status) {
+		this.setSession("obtainedStatus", status)
+	},
+	getObtainedStatus() {
+		return this.getSession("obtainedStatus")
+	},
+	setCurrentUid(uid) {
+		this.setSession("uid", uid)
+	},
+	getCurrentUid() {
+		return this.getSession("uid")
+	},
 	getSession(key) {
 		return uni.getStorageSync(key);
 	},
@@ -33,6 +45,11 @@ const util = {
 				}
 			})
 		}, 100)
+	},
+	goto(url, animationType, animationDuration, success, fail, complete) {
+		uni.reLaunch({
+			'url': url
+		})
 	}
 }
 

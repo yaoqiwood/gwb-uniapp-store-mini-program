@@ -68,6 +68,7 @@
 		<!--		</view>-->
 		<!-- 活动区 -->
 		<view class="promotion">
+
 			<!--			<view class="text">优惠专区</view>-->
 			<!--			<view class="list">-->
 			<!--				<view-->
@@ -113,7 +114,7 @@
 						<view class="hot_item_price_frame">
 							<view class="hot_item_price_item">
 								<text class="red">￥{{item.price}}</text>
-								<text style="text-decoration: line-through;color: #999999;font-size: 11px">￥{{item.oldPrice}}</text>
+								<!--								<text style="text-decoration: line-through;color: #999999;font-size: 11px">￥{{item.oldPrice}}</text>-->
 							</view>
 						</view>
 					</view>
@@ -131,7 +132,7 @@
 					<view
 									class="product"
 									v-for="product in productList"
-									:key="product.goods_id"
+									:key="product.goodsId"
 									@tap="toGoods(product)">
 						<image mode="widthFix" :src="product.img"></image>
 						<view class="name">{{ product.name }}</view>
@@ -144,6 +145,7 @@
 				<view class="loading-text">{{ loadingText }}</view>
 			</view>
 		</view>
+		<account-login-modal/>
 	</view>
 </template>
 
@@ -151,12 +153,15 @@
 	//高德SDK
 	import amap from '@/common/SDK/amap-wx.js'
 	// util
+	import Util from '@/util/Util'
 	import HomeApi from '@/api/home/Home'
 	import SystemApi from '@/api/system/System'
+	import AccountLoginModal from '@/pages/widgets/AccountLoginModal'
 
 	export default {
 		data() {
 			return {
+				// userToken: this.$store.token,
 				showHeader: true,
 				afterHeaderOpacity: 1,//不透明度
 				headerPosition: 'fixed',
@@ -165,6 +170,9 @@
 				nVueTitle: null,
 				city: '北京',
 				currentSwiper: 0,
+				stocksSiftCount: 0,
+				currentStep: 0,
+				stepSize: 8,
 				// 轮播图片
 				swiperList: [
 					// {id: 1, src: 'url1', img: '/static/img/gwb-img/gwb_logo_swiper.jpg'}
@@ -186,63 +194,63 @@
 				Promotion: [],
 				//猜你喜欢列表
 				productList: [
-					{
-						goods_id: 0,
-						img: '/static/img/goods/p1.jpg',
-						name: '商品名称商品名称商品名称商品名称商品名称',
-						price: '168',
-						slogan: '1235人付款'
-					},
-					{
-						goods_id: 1,
-						img: '/static/img/goods/p2.jpg',
-						name: '商品名称商品名称商品名称商品名称商品名称',
-						price: '168',
-						slogan: '1235人付款'
-					},
-					{
-						goods_id: 2,
-						img: '/static/img/goods/p3.jpg',
-						name: '商品名称商品名称商品名称商品名称商品名称',
-						price: '168',
-						slogan: '1235人付款'
-					},
-					{
-						goods_id: 3,
-						img: '/static/img/goods/p4.jpg',
-						name: '商品名称商品名称商品名称商品名称商品名称',
-						price: '168',
-						slogan: '1235人付款'
-					},
-					{
-						goods_id: 4,
-						img: '/static/img/goods/p5.jpg',
-						name: '商品名称商品名称商品名称商品名称商品名称',
-						price: '168',
-						slogan: '1235人付款'
-					}
+					// {
+					// 	goods_id: 0,
+					// 	img: '/static/img/goods/p1.jpg',
+					// 	name: '商品名称商品名称商品名称商品名称商品名称',
+					// 	price: '168',
+					// 	slogan: '1235人付款'
+					// },
+					// {
+					// 	goods_id: 1,
+					// 	img: '/static/img/goods/p2.jpg',
+					// 	name: '商品名称商品名称商品名称商品名称商品名称',
+					// 	price: '168',
+					// 	slogan: '1235人付款'
+					// },
+					// {
+					// 	goods_id: 2,
+					// 	img: '/static/img/goods/p3.jpg',
+					// 	name: '商品名称商品名称商品名称商品名称商品名称',
+					// 	price: '168',
+					// 	slogan: '1235人付款'
+					// },
+					// {
+					// 	goods_id: 3,
+					// 	img: '/static/img/goods/p4.jpg',
+					// 	name: '商品名称商品名称商品名称商品名称商品名称',
+					// 	price: '168',
+					// 	slogan: '1235人付款'
+					// },
+					// {
+					// 	goods_id: 4,
+					// 	img: '/static/img/goods/p5.jpg',
+					// 	name: '商品名称商品名称商品名称商品名称商品名称',
+					// 	price: '168',
+					// 	slogan: '1235人付款'
+					// }
 				],
 				loadingText: '正在加载...',
 				hotItemArray: [
-					{
-						itemId: 0,
-						img: '/static/img/gwb-img/mobil_cover1.jpg',
-						itemName: '正品保障Mobil美孚黑霸王15W-40机油4L',
-						price: 95,
-						oldPrice: 120
-					}, {
-						itemId: 1,
-						img: '/static/img/gwb-img/mobil_cover1.jpg',
-						itemName: '正品保障Mobil美孚黑霸王15W-40机油4L',
-						price: 95,
-						oldPrice: 120
-					}, {
-						itemId: 2,
-						img: '/static/img/gwb-img/mobil_cover1.jpg',
-						itemName: '正品保障Mobil美孚黑霸王15W-40机油4L',
-						price: 95,
-						oldPrice: 120
-					}
+					// {
+					// 	itemId: 0,
+					// 	img: '/static/img/gwb-img/mobil_cover1.jpg',
+					// 	itemName: '正品保障Mobil美孚黑霸王15W-40机油4L',
+					// 	price: 95,
+					// 	oldPrice: 120
+					// }, {
+					// 	itemId: 1,
+					// 	img: '/static/img/gwb-img/mobil_cover1.jpg',
+					// 	itemName: '正品保障Mobil美孚黑霸王15W-40机油4L',
+					// 	price: 95,
+					// 	oldPrice: 120
+					// }, {
+					// 	itemId: 2,
+					// 	img: '/static/img/gwb-img/mobil_cover1.jpg',
+					// 	itemName: '正品保障Mobil美孚黑霸王15W-40机油4L',
+					// 	price: 95,
+					// 	oldPrice: 120
+					// }
 				]
 			};
 		},
@@ -256,32 +264,49 @@
 		onPullDownRefresh() {
 			setTimeout(function () {
 				uni.stopPullDownRefresh();
-			}, 1000);
+			}, 1000)
 		},
 		//上拉加载，需要自己在page.json文件中配置"onReachBottomDistance"
 		onReachBottom() {
-			uni.showToast({title: '触发上拉加载'});
-			let len = this.productList.length;
-			if (len >= 40) {
-				this.loadingText = '到底了';
+			// uni.showToast({title: '触发上拉加载'});
+			let len = this.productList.length
+			if (len >= this.stocksSiftCount) {
+				this.loadingText = '完毕'
 				return false;
 			}
-			// 演示,随机加入商品,生成环境请替换为ajax请求
-			let end_goods_id = this.productList[len - 1].goods_id;
-			for (let i = 1; i <= 10; i++) {
-				let goods_id = end_goods_id + i;
-				let p = {
-					goods_id: goods_id,
-					img:
-						'/static/img/goods/p' + (goods_id % 10 == 0 ? 10 : goods_id % 10) + '.jpg',
-					name: '商品名称商品名称商品名称商品名称商品名称',
-					price: '￥168',
-					slogan: '1235人付款'
-				};
-				this.productList.push(p);
-			}
+			this.currentStep += 1
+			HomeApi.selectPTypePriceByPage(this.currentStep).then(resp => {
+				this.respFillProductList(resp)
+			})
+			// let end_goods_id = this.productList[len - 1].goods_id;
+			// for (let i = 1; i <= 10; i++) {
+			// 	let goods_id = end_goods_id + i;
+			// 	let p = {
+			// 		goods_id: goods_id,
+			// 		img:
+			// 			'/static/img/goods/p' + (goods_id % 10 == 0 ? 10 : goods_id % 10) + '.jpg',
+			// 		name: '商品名称商品名称商品名称商品名称商品名称',
+			// 		price: '￥168',
+			// 		slogan: '1235人付款'
+			// 	};
+			// 	this.productList.push(p);
+			// }
+		},
+		beforeCreate() {
+
+			// 登录
+			// if (!Util.getToken()) {
+			// 	// this.login()
+			// 	Util.login()
+			// }
 		},
 		onLoad() {
+			if (!Util.getToken()) {
+			}
+			// uni.reLaunch({
+			// 	url: '../../blank/LoginBlank'
+			// })
+			// 定位
 			this.loadLocation()
 			//开启定时器
 			this.Timer()
@@ -289,6 +314,11 @@
 			this.loadPromotion()
 			// 加载list
 			this.getSwipeImgList()
+			// 加载热门商品
+			this.getGoodStocksSaleTopThree()
+			// 加载商品列表
+			this.getCountAndStocksList()
+
 		},
 		methods: {
 			//加载Promotion 并设定倒计时,,实际应用中应该是ajax加载此数据。
@@ -431,6 +461,21 @@
 					// this.swiperList.push(item)
 				})
 			},
+			getGoodStocksSaleTopThree() {
+				HomeApi.getGoodStocksSaleTopThree().then(resp => {
+					for (const respElement of resp) {
+						let annexConfigInfo = JSON.parse(respElement.annexConfigInfo)
+						// console.log(annexConfigInfo.storagePath + annexConfigInfo.newAnnexName)
+						let item = {
+							itemId: respElement.PtypeId,
+							img: SystemApi.getMinioImg(annexConfigInfo.storagePath + annexConfigInfo.newAnnexName),
+							itemName: respElement.pfullname,
+							price: respElement.Price
+						}
+						this.hotItemArray.push(item)
+					}
+				})
+			},
 			loadLocation() {
 				// #ifdef APP-PLUS
 				this.nVueTitle = uni.getSubNVueById('homeTitleNvue');
@@ -445,7 +490,8 @@
 				// #endif
 				this.amapPlugin = new amap.AMapWX({
 					//高德地图KEY，随时失效，请务必替换为自己的KEY，参考：http://ask.dcloud.net.cn/article/35070
-					key: '7c235a9ac4e25e482614c6b8eac6fd8e'
+					// key: '7c235a9ac4e25e482614c6b8eac6fd8e'
+					key: '3bf4eeb9a4c33220b2c4c24d2931b9eb'
 				});
 				//定位地址
 				this.amapPlugin.getRegeo({
@@ -456,13 +502,88 @@
 						// #endif
 					}
 				})
+			},
+			login() {
+				// uni.login({
+				// 	provider: 'weixin',
+				// 	success: (loginRes) => {
+				// 		SystemApi.wxUserLogin2Server(loginRes.code).then(resp => {
+				// 			Util.setToken(resp.token)
+				// 			uni.getUserInfo({
+				// 				provider: 'weixin',
+				// 				success: (infoRes) => {
+				// 					SystemApi.wxUserInfUpdate({
+				// 						uid: resp.uid,
+				// 						avatarUrl: infoRes.userInfo.avatarUrl,
+				// 						city: infoRes.userInfo.city,
+				// 						country: infoRes.userInfo.country,
+				// 						gender: infoRes.userInfo.gender,
+				// 						nickName: infoRes.userInfo.nickName,
+				// 						province: infoRes.userInfo.province
+				// 					})
+				// 				}
+				// 			})
+				// 		})
+				// 	}
+				// })
+			},
+			checkSession() {
+				// uni.checkSession({
+				// 	success: (res) => {
+				// 		// console.log(res)
+				// 	},
+				// 	fail: (res) => {
+				// 		console.log(res)
+				// 	}
+				// })
+			},
+			getCountAndStocksList() {
+				HomeApi.getGoodStockSiftCount().then(resp => {
+					this.stocksSiftCount = resp
+					HomeApi.selectPTypePriceByPage().then(resp => {
+						this.currentStep = 1
+						this.respFillProductList(resp)
+						// {
+						// 	goods_id: 0,
+						// 	img: '/static/img/goods/p1.jpg',
+						// 	name: '商品名称商品名称商品名称商品名称商品名称',
+						// 	price: '168',
+						// 	slogan: '1235人付款'
+						// },
+						// {
+					})
+				})
+			},
+			getGoodStockSiftCount() {
+				HomeApi.getGoodStockSiftCount().then(resp => {
+
+				})
+			},
+			selectPTypePriceByPage() {
+				HomeApi.selectPTypePriceByPage().then(resp => {
+
+				})
+			},
+			respFillProductList(resp) {
+				for (const argument of resp.records) {
+					let respElement = argument.sysAnnexConfigInfo
+					let product = {
+						goodsId: argument.ptypeid,
+						img: SystemApi.getMinioImg(`${respElement.storagePath}${respElement.newAnnexName}`),
+						name: argument.pfullname,
+						price: argument.price,
+						slogan: (argument.saleCount === null ? 0 : argument.saleCount) + '次付款'
+					}
+					this.productList.push(product)
+				}
 			}
 		},
 		computed: {
 			imgStyle: (item) => {
 				return 'background-img:url:(' + item.img + ')'
 			}
-		}
+		},
+		components: {AccountLoginModal}
 	}
 </script>
 <style lang="scss">

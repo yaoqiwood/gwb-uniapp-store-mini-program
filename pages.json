@@ -2,6 +2,20 @@
   "pages": [
     //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
     {
+      "path": "pages/blank/LoginBlank",
+      "style": {
+        "navigationBarTitleText": "正在登录",
+        "enablePullDownRefresh": false,
+        "backgroundColorTop": "#ffffff",
+        "backgroundColorBottom": "#ffffff",
+        "app-plus": {
+          //禁用原生导航栏
+          "softinputNavBar": "none",
+          "bounce": "none"
+        }
+      }
+    },
+    {
       "path": "pages/tabBar/home/home",
       "style": {
         "navigationBarTextStyle": "black",
@@ -11,15 +25,13 @@
           "titleNView": false,
           //禁用原生导航栏
           "softinputNavBar": "none",
-          "subNVues": [
-            {
-              "id": "homeTitleNvue",
-              // 唯一标识
-              "path": "pages/tabBar/home/subNvue/homeTitleNvue",
-              // 页面路径
-              "type": "navigationBar"
-            }
-          ]
+          "subNVues": [{
+            "id": "homeTitleNvue",
+            // 唯一标识
+            "path": "pages/tabBar/home/subNvue/homeTitleNvue",
+            // 页面路径
+            "type": "navigationBar"
+          }]
         }
       }
     },
@@ -43,15 +55,13 @@
           "titleNView": false,
           //禁用原生导航栏
           "softinputNavBar": "none",
-          "subNVues": [
-            {
-              "id": "cartTitleNvue",
-              // 唯一标识
-              "path": "pages/tabBar/cart/subNvue/cartTitleNvue",
-              // 页面路径
-              "type": "navigationBar"
-            }
-          ]
+          "subNVues": [{
+            "id": "cartTitleNvue",
+            // 唯一标识
+            "path": "pages/tabBar/cart/subNvue/cartTitleNvue",
+            // 页面路径
+            "type": "navigationBar"
+          }]
         }
       }
     },
@@ -60,21 +70,22 @@
       "style": {
         "enablePullDownRefresh": true,
         "backgroundTextStyle": "light",
-        "navigationBarBackgroundColor": "#f06c7a",
-        "backgroundColorTop": "#f06c7a",
+        //        "navigationBarBackgroundColor": "#f06c7a",
+        "navigationBarBackgroundColor": "#FF3E3E",
+        //        "backgroundColorTop": "#f06c7a",
+        "backgroundColorTop": "#FF3E3E",
         "navigationBarTextStyle": "white",
+        "navigationBarTitleText": "个人中心",
         "app-plus": {
           "titleNView": false,
           //禁用原生导航栏
-          "subNVues": [
-            {
-              "id": "userTitleNvue",
-              // 唯一标识
-              "path": "pages/tabBar/user/subNvue/userTitleNvue",
-              // 页面路径
-              "type": "navigationBar"
-            }
-          ]
+          "subNVues": [{
+            "id": "userTitleNvue",
+            // 唯一标识
+            "path": "pages/tabBar/user/subNvue/userTitleNvue",
+            // 页面路径
+            "type": "navigationBar"
+          }]
         }
       }
     },
@@ -289,8 +300,7 @@
     "selectedColor": "#f06c7a",
     "borderStyle": "black",
     "backgroundColor": "#ffffff",
-    "list": [
-      {
+    "list": [{
         "pagePath": "pages/tabBar/home/home",
         "iconPath": "static/img/gwb-img/db_shouye.png",
         "selectedIconPath": "static/img/gwb-img/db_shouye1.png",
@@ -316,14 +326,17 @@
       }
     ]
   },
-	"condition" : { //模式配置，仅开发期间生效
-		"current": 0, //当前激活的模式(list 的索引项)
-		"list": [
-			{
-				"name": "", //模式名称
-				"path": "", //启动页面，必选
-				"query": "" //启动参数，在页面的onLoad函数里面得到
-			}
-		]
-	}
+  "condition": {
+    //模式配置，仅开发期间生效
+    "current": 0,
+    //当前激活的模式(list 的索引项)
+    "list": [{
+      "name": "",
+      //模式名称
+      "path": "",
+      //启动页面，必选
+      "query": ""
+      //启动参数，在页面的onLoad函数里面得到
+    }]
+  }
 }

@@ -1,5 +1,6 @@
 import util from '@/util/Util'
 import config from '@/config'
+import AccountUtil from '@/util/AccountUtil'
 
 const host = config.api.host;
 const port = config.api.port;
@@ -25,7 +26,7 @@ const request = {
 				method: method,
 				header: {
 					'Content-Type': 'application/json', //自定义请求头信息
-					'token': util.getToken(),
+					'X-Access-Token': util.getToken(),
 					'appId': config.api.appId,
 					'timestamp': time,
 					'timeoutExpress': time + 30
@@ -33,15 +34,21 @@ const request = {
 				},
 				success: res => {
 					if (res.statusCode === 200) {
-						if (res.data.result.code == 909) {
-							util.goto('login/login');
-							util.showToast('请重新登录');
-							reject(res.data);
-						} else {
-							resolve(res.data.result)
-						}
+						resolve(res.data.result)
 					} else if (res.statusCode === 500) {
-						util.showToast('服务器出问题了')
+						if (res.data.status == 500) {
+							// util.goto('login/login');
+							util.showToast('正在重新登录......');
+							util.setToken(null)
+							// util.goto('/pages/blank/LoginBlank')
+							AccountUtil.login().then(resp => {
+								if (resp) {
+									util.goto('/pages/tabBar/home/home')
+								}
+							})
+							// reject(res.data);
+						}
+						// util.showToast('服务器出问题了')
 					} else {
 						util.showToast(res.data.result.msg)
 					}
