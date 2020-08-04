@@ -1,4 +1,8 @@
-page{position: relative;background-color: #fff;}
+page {
+  position: relative;
+  background-color: #fff;
+}
+
 .status {
   width: 100%;
   height: 0;
@@ -7,12 +11,12 @@ page{position: relative;background-color: #fff;}
   //background-color: #f06c7a;
   top: 0;
   /*  #ifdef  APP-PLUS  */
-  height: var(--status-bar-height);//覆盖样式
+  height: var(--status-bar-height); //覆盖样式
   /*  #endif  */
 
 }
 
-.header{
+.header {
   width: 92%;
   padding: 0 4%;
   height: 100upx;
@@ -25,13 +29,15 @@ page{position: relative;background-color: #fff;}
   //background-color: #f06c7a;
   /*  #ifdef  APP-PLUS  */
   top: var(--status-bar-height);
+
   /*  #endif  */
-  .icon-btn{
+  .icon-btn {
     width: 120upx;
     height: 60upx;
     flex-shrink: 0;
     display: flex;
-    .icon{
+
+    .icon {
       color: #fff;
       width: 60upx;
       height: 60upx;
@@ -42,17 +48,20 @@ page{position: relative;background-color: #fff;}
     }
   }
 }
-.place{
+
+.place {
   //background-color: #f06c7a;
   height: 100upx;
   /*  #ifdef  APP-PLUS  */
   margin-top: var(--status-bar-height);
   /*  #endif  */
 }
-.place-bottom{
+
+.place-bottom {
   height: 300upx;
 }
-.user{
+
+.user {
   width: 92%;
   padding: 0 4%;
   display: flex;
@@ -60,32 +69,38 @@ page{position: relative;background-color: #fff;}
   // position: relative;
   //background-color: #f06c7a;
   padding-bottom: 120upx;
-  .left{
+
+  .left {
     width: 20vw;
     height: 20vw;
     flex-shrink: 0;
     margin-right: 20upx;
     border: solid 1upx #fff;
     border-radius: 100%;
-    image{
+
+    image {
       width: 20vw;
       height: 20vw;
       border-radius: 100%;
     }
 
   }
-  .right{
+
+  .right {
     width: 100%;
-    .username{
+
+    .username {
       font-size: 36upx;
       color: #fff;
     }
-    .signature{
+
+    .signature {
       color: #eee;
       font-size: 28upx;
     }
   }
-  .erweima{
+
+  .erweima {
     flex-shrink: 0;
     width: 10vw;
     height: 10vw;
@@ -95,36 +110,43 @@ page{position: relative;background-color: #fff;}
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(to left, #fbbb37 0%,#fcf0d0 105%);
-    .icon{
+    background: linear-gradient(to left, #fbbb37 0%, #fcf0d0 105%);
+
+    .icon {
       color: #7b6335;
       font-size: 42upx;
     }
   }
 }
-.order{
+
+.order {
   width: 84%;
   margin: 30upx 4% 30upx 4%;
   padding: 30upx 4% 20upx 4%;
   background-color: #fff;
-  box-shadow: 0upx 0upx 25upx rgba(0,0,0,0.1);
+  box-shadow: 0upx 0upx 25upx rgba(0, 0, 0, 0.1);
   border-radius: 15upx;
-  .list{
+
+  .list {
     display: flex;
-    border-bottom: solid 1upx #17e6a1;
+    // border-bottom: solid 1upx #17e6a1;
     padding-bottom: 10upx;
-    .box{
+
+    .box {
       width: 20%;
-      .img{
+
+      .img {
         width: 100%;
         display: flex;
         justify-content: center;
-        .icon{
+
+        .icon {
           font-size: 50upx;
           color: #464646;
         }
       }
-      .text{
+
+      .text {
         width: 100%;
         display: flex;
         justify-content: center;
@@ -133,17 +155,20 @@ page{position: relative;background-color: #fff;}
       }
     }
   }
-  .balance-info{
+
+  .balance-info {
     display: flex;
     padding: 10upx 0;
-    .left{
+
+    .left {
       width: 75%;
       display: flex;
-      .box{
+
+      .box {
         width: 50%;
         font-size: 28upx;
 
-        .num{
+        .num {
           width: 100%;
           height: 50upx;
           display: flex;
@@ -151,7 +176,8 @@ page{position: relative;background-color: #fff;}
           align-items: flex-end;
           color: #f9a453;
         }
-        .text{
+
+        .text {
           width: 100%;
           display: flex;
           justify-content: center;
@@ -160,23 +186,27 @@ page{position: relative;background-color: #fff;}
         }
       }
     }
-    .right{
+
+    .right {
       border-left: solid 1upx #17e6a1;
       width: 25%;
-      .box{
 
-        .img{
+      .box {
+
+        .img {
           width: 100%;
           height: 50upx;
           display: flex;
           justify-content: center;
           align-items: flex-end;
-          .icon{
+
+          .icon {
             font-size: 45upx;
             color: #e78901;
           }
         }
-        .text{
+
+        .text {
           width: 100%;
           display: flex;
           justify-content: center;
@@ -187,30 +217,35 @@ page{position: relative;background-color: #fff;}
     }
   }
 }
-.VIP{
+
+.VIP {
   width: 84%;
   margin: -65upx auto 20upx auto;
   padding: 30upx 4%;
-  background: linear-gradient(to left, #dea96d 0%,#f6d59b 100%);
-  box-shadow: 0upx 0upx 25upx rgba(0,0,0,0.2);
+  background: linear-gradient(to left, #dea96d 0%, #f6d59b 100%);
+  box-shadow: 0upx 0upx 25upx rgba(0, 0, 0, 0.2);
   border-radius: 15upx;
   display: flex;
   align-items: center;
-  .img{
+
+  .img {
     flex-shrink: 0;
     width: 60upx;
     height: 60upx;
-    image{
+
+    image {
       width: 60upx;
       height: 60upx;
     }
   }
-  .title{
+
+  .title {
     width: 100%;
     color: #796335;
     font-size: 30upx;
   }
-  .tis{
+
+  .tis {
     width: 100%;
     display: flex;
     justify-content: flex-end;
@@ -218,14 +253,16 @@ page{position: relative;background-color: #fff;}
     font-size: 26upx;
   }
 }
-.toolbar{
+
+.toolbar {
   width: 92%;
   margin: 0 4% 0 4%;
   padding: 0 0 20upx 0;
   background-color: #fff;
-  box-shadow: 0upx 0upx 25upx rgba(0,0,0,0.1);
+  box-shadow: 0upx 0upx 25upx rgba(0, 0, 0, 0.1);
   border-radius: 15upx;
-  .title{
+
+  .title {
     padding-top: 10upx;
     margin: 0 0 10upx 3%;
     font-size: 30upx;
@@ -233,24 +270,28 @@ page{position: relative;background-color: #fff;}
     display: flex;
     align-items: center;
   }
-  .list{
+
+  .list {
     display: flex;
     flex-wrap: wrap;
-    .box{
+
+    .box {
       width: 25%;
       margin-bottom: 30upx;
-      .img{
+
+      .img {
         width: 23vw;
         height: 10.5vw;
         display: flex;
         justify-content: center;
 
-        image{
+        image {
           width: 9vw;
           height: 9vw;
         }
       }
-      .text{
+
+      .text {
         width: 100%;
         display: flex;
         justify-content: center;
@@ -261,9 +302,22 @@ page{position: relative;background-color: #fff;}
   }
 }
 
-.user-bg{
+.user-bg {
   position: absolute;
   width: 100%;
-  top:0;
+  top: 0;
   z-index: -1;
+}
+
+.allOrder {
+  display: inline-block;
+  background-image: url('/static/img/gwb-img/order.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  vertical-align: bottom;
+  width: 28px;
+  height: 28px;
+  margin-bottom: 1.5px;
+  position: relative;
+  top: 1px;
 }

@@ -10,7 +10,6 @@
           :style="{position:headerPosition,top:headerTop}">
       <view class="addr"></view>
       <view class="input-box">
-
       </view>
       <view class="icon-btn">
         <view class="icon tongzhi"
@@ -35,6 +34,7 @@
         <view class="username"
               @tap="toLogin">{{user.username}}</view>
         <view class="signature"
+              v-if="user.signature"
               @tap="toSetting">{{user.signature}}</view>
       </view>
       <!-- 二维码按钮 -->
@@ -116,13 +116,19 @@
     </view>
     <!-- 占位 -->
     <view class="place-bottom"></view>
+    <account-login-modal ref="accountLoginModal"
+                         @setWxUserInf="setWxUserInf" />
   </view>
 </template>
 <script>
+import Util from '@/util/Util'
+import SystemApi from '@/api/system/System'
+import AccountLoginModal from '../../widgets/AccountLoginModal'
 
 export default {
   data () {
     return {
+      switch2DisplayProp: false,
       isfirst: true,
       headerPosition: "fixed",
       headerTop: null,
@@ -140,7 +146,7 @@ export default {
       },
       // 订单类型
       orderList: [
-        { text: '全部订单', icon: "fukuan" },
+        { text: '全部订单', icon: "allOrder" },
         { text: '待付款', icon: "fukuan" },
         { text: '待发货', icon: "fahuo" },
         { text: '待收货', icon: "shouhuo" },
@@ -150,17 +156,16 @@ export default {
       // 工具栏列表
       mytoolbarList: [
         { url: '../../user/keep/keep', text: '我的收藏', img: '/static/img/user/point.png' },
-        { url: '../../user/coupon/coupon', text: '优惠券', img: '/static/img/user/quan.png' },
-        { url: '', text: '新客豪礼', img: '/static/img/user/renw.png' },
-        { url: '', text: '领红包', img: '/static/img/user/momey.png' },
+        // { url: '../../user/coupon/coupon', text: '优惠券', img: '/static/img/user/quan.png' },
+        // { url: '', text: '新客豪礼', img: '/static/img/user/renw.png' },
+        // { url: '', text: '领红包', img: '/static/img/user/momey.png' },
 
-        { url: '../../user/address/address', text: '收货地址', img: '/static/img/user/addr.png' },
-        { url: '', text: '账户安全', img: '/static/img/user/security.png' },
-        { url: '', text: '银行卡', img: '/static/img/user/bank.png' },
-        { url: '', text: '抽奖', img: '/static/img/user/choujiang.png' },
+        { url: '../../user/address/address', text: '收货地址', img: '/static/img/user/addr.png' }
+        // { url: '', text: '账户安全', img: '/static/img/user/security.png' },
+        // { url: '', text: '银行卡', img: '/static/img/user/bank.png' },
+        // { url: '', text: '抽奖', img: '/static/img/user/choujiang.png' },
         // {text:'客服',img:'/static/img/user/kefu.png'},
         // {text:'签到',img:'/static/img/user/mingxi.png'}
-
       ]
     }
   },
@@ -185,31 +190,38 @@ export default {
   },
   onReady () {
     //此处，演示,每次页面初次渲染都把登录状态重置
-    uni.setStorage({
-      key: 'UserInfo',
-      data: false,
-      success: function () {
-      },
-      fail: function (e) {
-      }
-    });
+    if (!Util.getObtainedStatus()) {
+      // 还未授权的情况
+    } else {
+      // 检查本地是否已经存在的用户信息
+      this.getSessionUserInf()
+    }
+
+    // uni.setStorage({
+    //   key: 'UserInfo',
+    //   data: false,
+    //   success: function () {
+    //   },
+    //   fail: function (e) {
+    //   }
+    // });
   },
   onShow () {
-    uni.getStorage({
-      key: 'UserInfo',
-      success: (res) => {
-        if (!res.data) {
-          if (this.isfirst) {
-            //this.toLogin();
-          }
-          return;
-        }
-        this.user = res.data;
-      },
-      fail: (e) => {
-        //this.toLogin();
-      }
-    });
+    // uni.getStorage({
+    //   key: 'UserInfo',
+    //   success: (res) => {
+    //     if (!res.data) {
+    //       if (this.isfirst) {
+    //         //this.toLogin();
+    //       }
+    //       return;
+    //     }
+    //     this.user = res.data;
+    //   },
+    //   fail: (e) => {
+    //     //this.toLogin();
+    //   }
+    // });
   },
   methods: {
     //消息列表
@@ -233,11 +245,12 @@ export default {
       })
     },
     toLogin () {
-      uni.showToast({ title: '请登录', icon: "none" });
-      uni.navigateTo({
-        url: '../../login/login'
-      })
-      this.isfirst = false;
+      // uni.showToast({ title: '请授权登录', icon: "none" });
+      this.controlAccountLoginModal(true)
+      // uni.navigateTo({
+      //   url: '../../login/login'
+      // })
+      // this.isfirst = false;
     },
     isLogin () {
       //实际应用中,用户登录状态应该用token等方法去维持登录状态.
@@ -260,7 +273,42 @@ export default {
       uni.navigateTo({
         url: url
       })
+    },
+    getSessionUserInf () {
+      let obj = null
+      if (Util.getCurrentUserInf()) {
+        obj = JSON.parse(Util.getCurrentUserInf())
+        this.userOb(obj)
+      } else {
+        SystemApi.getWxUserInf().then(resp => {
+          obj = resp
+          Util.setCurrentUserInf(JSON.stringify(obj))
+          this.userObj(obj)
+        })
+      }
+    },
+    userObj (obj) {
+      this.user.username = obj.nickname
+      this.user.face = obj.avatar
+      this.user.signature = false
+    },
+    controlAccountLoginModal (bool) {
+      if (bool) {
+        this.$refs['accountLoginModal'].openModal()
+      } else {
+        this.$refs['accountLoginModal'].closeModal()
+      }
+    },
+    setWxUserInf (obj) {
+      let tempObj = {
+        nickname: obj.nickName,
+        avatar: obj.avatarUrl
+      }
+      this.userObj(tempObj)
     }
+  },
+  components: {
+    AccountLoginModal
   }
 }
 </script>
