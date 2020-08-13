@@ -179,15 +179,15 @@
         "backgroundColorBottom": "#f3f3f3"
       }
     },
-    {
-      "path": "pages/user/myQR/myQR",
-      "style": {
-        "navigationBarTitleText": "我的二维码",
-        "app-plus": {
-          "bounce": "none"
-        }
-      }
-    },
+    // {
+    //   "path": "pages/user/myQR/myQR",
+    //   "style": {
+    //     "navigationBarTitleText": "我的二维码",
+    //     "app-plus": {
+    //       "bounce": "none"
+    //     }
+    //   }
+    // },
     {
       "path": "pages/msg/msg",
       "style": {
