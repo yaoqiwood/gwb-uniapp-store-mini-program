@@ -92,9 +92,14 @@
     {
       "path": "pages/goods/goods-list/goods-list",
       "style": {
-        "navigationBarTitleText": "",
+        "navigationBarTitleText": "商品列表",
         "enablePullDownRefresh": true,
+        // "app-plus": {
+        //   "bounce": "none"
+        // }
         "app-plus": {
+          //禁用原生导航栏
+          "softinputNavBar": "none",
           "bounce": "none"
         }
       }

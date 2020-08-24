@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
 	api: {
-		host: 'http://192.168.2.70',
+		host: 'http://192.168.0.17',
 		port: '8080',
 		projectName: '/jeecg-boot/'
 	},

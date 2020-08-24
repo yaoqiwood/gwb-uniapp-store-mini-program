@@ -17,8 +17,10 @@
       <view class="input-box">
         <input placeholder="请输入关键字"
                placeholder-style="color:#c0c0c0;"
-               @tap="toSearch()" />
-        <view class="icon search"></view>
+               v-model="searchWord"
+               @confirm="toSearch" />
+        <view class="icon search"
+              @tap="toSearch()"></view>
       </view>
       <!-- 右侧图标按钮 -->
       <view class="icon-btn">
@@ -427,7 +429,11 @@ export default {
     },
     //搜索跳转
     toSearch () {
-      uni.showToast({ title: '建议跳转到新页面做搜索功能' });
+      let pfullname = this.searchWord
+      uni.navigateTo({
+        url: '../../goods/goods-list/goods-list?pfullname=' + pfullname
+      })
+      // uni.showToast({ title: '建议跳转到新页面做搜索功能' });
     },
     //轮播图跳转
     toSwiper (e) {
@@ -587,6 +593,14 @@ export default {
         }
         this.productList.push(product)
       }
+    },
+    //搜索跳转
+    toSearch () {
+      let pfullname = this.searchWord
+      uni.navigateTo({
+        url: '../../goods/goods-list/goods-list?pfullname=' + pfullname
+      })
+      // uni.showToast({ title: "建议跳转到新页面做搜索功能" });
     }
   },
   computed: {

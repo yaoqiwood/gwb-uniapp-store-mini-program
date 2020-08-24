@@ -1,0 +1,135 @@
+.icon {
+  font-size: 26upx;
+}
+
+.header {
+  width: 92%;
+  padding: 0 4%;
+  height: 150upx;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  position: fixed;
+  flex-wrap: wrap;
+  top: 0;
+  z-index: 10;
+  background-color: #fff;
+  border-bottom: solid 1upx #eee;
+
+
+  .input-box {
+    width: 100%;
+    height: 60upx;
+    background-color: #f5f5f5;
+    border-radius: 30upx;
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    .icon {
+      display: flex;
+      align-items: center;
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 60upx;
+      height: 60upx;
+      font-size: 34upx;
+      color: #c0c0c0;
+    }
+
+    input {
+      padding-left: 28upx;
+      width: 80%;
+      height: 28upx;
+      font-size: 28upx;
+    }
+  }
+
+  .target {
+    width: 20%;
+    height: 60upx;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28upx;
+    margin-bottom: -2upx;
+    color: #aaa;
+
+    &.on {
+      color: #555;
+      border-bottom: 4upx solid #EE0A24;
+      font-weight: 600;
+      font-size: 30upx;
+    }
+  }
+}
+
+.place {
+  background-color: #ffffff;
+  height: 160upx;
+}
+
+.goods-list {
+
+  .loading-text {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60upx;
+    color: #979797;
+    font-size: 24upx;
+  }
+
+  .product-list {
+    width: 92%;
+    padding: 0 4% 3vw 4%;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    .product {
+      width: 48%;
+      border-radius: 20upx;
+      background-color: #fff;
+      margin: 0 0 15upx 0;
+      box-shadow: 0upx 5upx 25upx rgba(0, 0, 0, 0.1);
+
+      image {
+        width: 100%;
+        border-radius: 20upx 20upx 0 0;
+      }
+
+      .name {
+        width: 92%;
+        padding: 10upx 4%;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        text-align: justify;
+        overflow: hidden;
+        font-size: 30upx;
+      }
+
+      .info {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        width: 92%;
+        padding: 10upx 4% 10upx 4%;
+
+        .price {
+          color: #e65339;
+          font-size: 30upx;
+          font-weight: 600;
+        }
+
+        .slogan {
+          color: #807c87;
+          font-size: 24upx;
+        }
+      }
+    }
+  }
+}

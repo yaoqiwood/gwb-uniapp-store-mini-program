@@ -11,8 +11,10 @@
       <view class="input-box">
         <input placeholder="默认关键字"
                placeholder-style="color:#c0c0c0;"
-               @tap="toSearch()" />
-        <view class="icon search"></view>
+               v-model="searchWord"
+               @confirm="toSearch" />
+        <view class="icon search"
+              @tap="toSearch()"></view>
       </view>
       <view class="icon-btn">
         <view class="icon tongzhi"
@@ -62,6 +64,7 @@
         </view>
       </scroll-view>
     </view>
+    <account-login-modal />
   </view>
 </template>
 <script>
@@ -69,6 +72,8 @@
 import amap from '@/common/SDK/amap-wx.js';
 import CategoryApi from '@/api/category/Category'
 import SystemApi from '@/api/system/System'
+import AccountLoginModal from '../../widgets/AccountLoginModal'
+import { ENUM_TASK_BAR } from '@/util/Constants'
 
 export default {
   data () {
@@ -90,40 +95,10 @@ export default {
         //     { name: '电吹风', img: '8.jpg' },
         //     { name: '电饭煲', img: '9.jpg' }
         //   ]
-        // },
-        // {
-        //   id: 2, title: '办公用品', banner: '/static/img/category/banner.jpg', list: [
-        //     { name: '打印机', img: '1.jpg' },
-        //     { name: '路由器', img: '2.jpg' },
-        //     { name: '扫描仪', img: '3.jpg' },
-        //     { name: '投影仪', img: '4.jpg' },
-        //     { name: '墨盒', img: '5.jpg' },
-        //     { name: '纸类', img: '6.jpg' }
-        //   ]
-        // },
-        // {
-        //   id: 3, title: '日常用品', banner: '/static/img/category/banner.jpg', list: [
-        //     { name: '茶具', img: '1.jpg' },
-        //     { name: '花瓶', img: '2.jpg' },
-        //     { name: '纸巾', img: '3.jpg' },
-        //     { name: '毛巾', img: '4.jpg' },
-        //     { name: '牙膏', img: '5.jpg' },
-        //     { name: '保鲜膜', img: '6.jpg' },
-        //     { name: '保鲜袋', img: '7.jpg' }
-        //   ]
-        // },
-        // {
-        //   id: 4, title: '蔬菜水果', banner: '/static/img/category/banner.jpg', list: [
-        //     { name: '苹果', img: '1.jpg' },
-        //     { name: '芒果', img: '2.jpg' },
-        //     { name: '椰子', img: '3.jpg' },
-        //     { name: '橙子', img: '4.jpg' },
-        //     { name: '奇异果', img: '5.jpg' },
-        //     { name: '玉米', img: '6.jpg' },
-        //     { name: '百香果', img: '7.jpg' }
-        //   ]
         // }
-      ]
+        // }
+      ],
+      searchWord: ''
     }
   },
   onPageScroll (e) {
@@ -133,6 +108,9 @@ export default {
     } else {
       this.headerPosition = "absolute";
     }
+  },
+  created () {
+    this.getPtypeDtoMiniProgramMenu()
   },
   onLoad () {
     this.amapPlugin = new amap.AMapWX({
@@ -145,7 +123,6 @@ export default {
         this.city = data[0].regeocodeData.addressComponent.city.replace(/市/g, '');//把"市"去掉
       }
     })
-    this.getPtypeDtoMiniProgramMenu()
   },
   methods: {
     //消息列表
@@ -159,14 +136,18 @@ export default {
       this.showCategoryIndex = index;
     },
     toCategory (e) {
-      uni.setStorageSync('catName', e.name);
+      uni.setStorageSync('catName', e.pfullname);
       uni.navigateTo({
-        url: '../../goods/goods-list/goods-list?cid=' + e.id + '&name=' + e.name
-      });
+        url: '../../goods/goods-list/goods-list?ptypeid=' + e.ptypeid + '&pfullname=' + e.pfullname + '&type=' + ENUM_TASK_BAR.CATEGORY.code
+      })
     },
     //搜索跳转
     toSearch () {
-      uni.showToast({ title: "建议跳转到新页面做搜索功能" });
+      let pfullname = this.searchWord
+      uni.navigateTo({
+        url: '../../goods/goods-list/goods-list?pfullname=' + pfullname
+      })
+      // uni.showToast({ title: "建议跳转到新页面做搜索功能" });
     },
     getPtypeDtoMiniProgramMenu () {
       CategoryApi.getPtypeDtoMiniProgramMenu().then(resp => {
@@ -180,7 +161,8 @@ export default {
     getMinioImgUrl (sysAnnex) {
       return SystemApi.getMinioImg(sysAnnex.storagePath + sysAnnex.newAnnexName)
     }
-  }
+  },
+  components: { AccountLoginModal }
 }
 </script>
 <style lang="scss">
