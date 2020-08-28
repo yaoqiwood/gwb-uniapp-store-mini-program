@@ -198,7 +198,7 @@
       "style": {
         "enablePullDownRefresh": true,
         "navigationBarTitleText": "消息列表",
-        "navigationBarBackgroundColor": "#f06c7a",
+        "navigationBarBackgroundColor": "#FF3E3E",
         "navigationBarTextStyle": "white"
       }
     },

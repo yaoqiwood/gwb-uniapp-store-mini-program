@@ -26,6 +26,15 @@ const util = {
 	getCurrentUserInf () {
 		this.getSession("currentUserInf")
 	},
+	setShopingCartInf (params) {
+		this.setSession("shoppingCart", JSON.stringify(params))
+	},
+	getShoppingCartInf () {
+		if (null == this.getSession("shoppingCart") || '' == this.getSession('shoppingCart')) {
+			return []
+		}
+		return JSON.parse(this.getSession("shoppingCart"))
+	},
 	getSession (key) {
 		return uni.getStorageSync(key);
 	},

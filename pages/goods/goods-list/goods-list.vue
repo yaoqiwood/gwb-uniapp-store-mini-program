@@ -83,7 +83,8 @@ export default {
       orderColumn: ENUM_GOODS_COLUMN.PRICE.code,
       order: ENUM_ORDER.ASC.code,
       currentType: ENUM_GOODS_COLUMN.PRICE.code,
-      searchWord: ''
+      searchWord: '',
+      stepSize: 8
     }
   },
   onLoad: function (option) { //option为object类型，会序列化上个页面传递的参数
@@ -142,7 +143,7 @@ export default {
     }
 
     this.currentStep++
-    GoodListApi.searchPtypeByPage(this.currentStep, undefined, this.pfullname, this.parId, this.orderColumn, this.order).then(resp => {
+    GoodListApi.searchPtypeByPage(this.currentStep, this.stepSize, this.pfullname, this.parId, this.orderColumn, this.order).then(resp => {
       this.orderListCount = resp.total
       this.goodsList.push(...resp.records)
     })
@@ -166,10 +167,10 @@ export default {
     },
     //商品跳转
     toGoods (e) {
-      uni.showToast({ title: '商品' + e.goods_id, icon: "none" });
+      // uni.showToast({ title: '商品' + e.goods_id, icon: "none" });
       uni.navigateTo({
-        url: '../goods'
-      });
+        url: '../goods?ptypeId=' + e.ptypeid
+      })
     },
     //排序类型
     select (index) {
@@ -188,7 +189,7 @@ export default {
       let type = this.orderbyList.filter(item => item.selected === true)[0]
       this.goodsList = []
       this.currentStep = 1
-      this.pfullname = ''
+      // this.pfullname = ''
       // this.parId = undefined
       // 升序逻辑
       this.orderColumn = type.column
@@ -217,9 +218,9 @@ export default {
       this.loadData(this.currentStep, this.pfullname, this.parId, this.orderColumn, this.order)
     },
     loadData (currentStep, pfullname, parId, orderColumn, order) {
-      GoodListApi.searchPtypeByPage(currentStep, undefined, pfullname, parId, orderColumn, order).then(resp => {
+      GoodListApi.searchPtypeByPage(currentStep, this.stepSize, pfullname, parId, orderColumn, order).then(resp => {
         // 暂时定为5
-        if (resp.records.length < 5) {
+        if (resp.records.length < this.stepSize) {
           this.loadingText = '完毕'
         }
         this.goodsList = resp.records
@@ -228,6 +229,11 @@ export default {
     },
     getMinioImgUrl (annexInfo) {
       return MinioApi.getMinioImg(annexInfo.storagePath + annexInfo.newAnnexName)
+    },
+    toGoodsNav (id) {
+      uni.navigateTo({
+        url: '../../goods/goods?ptypeId=' + id
+      })
     }
   }
 

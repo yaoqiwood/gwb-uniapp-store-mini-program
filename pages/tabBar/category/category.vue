@@ -110,7 +110,6 @@ export default {
     }
   },
   created () {
-    this.getPtypeDtoMiniProgramMenu()
   },
   onLoad () {
     this.amapPlugin = new amap.AMapWX({
@@ -123,6 +122,10 @@ export default {
         this.city = data[0].regeocodeData.addressComponent.city.replace(/市/g, '');//把"市"去掉
       }
     })
+    // 加载分类菜单
+    this.getPtypeDtoMiniProgramMenu()
+  },
+  onShow () {
   },
   methods: {
     //消息列表

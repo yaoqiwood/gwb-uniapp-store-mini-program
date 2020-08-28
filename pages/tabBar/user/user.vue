@@ -160,7 +160,8 @@ export default {
         // { url: '', text: '新客豪礼', img: '/static/img/user/renw.png' },
         // { url: '', text: '领红包', img: '/static/img/user/momey.png' },
 
-        { url: '../../user/address/address', text: '收货地址', img: '/static/img/user/addr.png' }
+        // { url: '../../user/address/address', text: '收货地址', img: '/static/img/user/addr.png' }
+        { url: 'address', text: '收货地址', img: '/static/img/user/addr.png' }
         // { url: '', text: '账户安全', img: '/static/img/user/security.png' },
         // { url: '', text: '银行卡', img: '/static/img/user/bank.png' },
         // { url: '', text: '抽奖', img: '/static/img/user/choujiang.png' },
@@ -270,9 +271,16 @@ export default {
         uni.showToast({ title: '模板未包含此页面', icon: "none" });
         return;
       }
-      uni.navigateTo({
-        url: url
-      })
+
+      // address 不跳转 查找依赖微信
+      if (url === 'address') {
+        uni.chooseAddress()
+      } else {
+        uni.navigateTo({
+          url: url
+        })
+      }
+
     },
     getSessionUserInf () {
       let obj = null

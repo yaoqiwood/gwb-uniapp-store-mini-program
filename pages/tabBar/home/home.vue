@@ -114,7 +114,8 @@
         <view class="hot_goods_frame">
           <view class="hot_items"
                 v-for="item in hotItemArray"
-                :key="item.itemId">
+                :key="item.itemId"
+                @tap="toGoodsNav(item.itemId)">
             <cover-image :src="item.img"></cover-image>
             <view class="hot_item_text">
               <text>{{item.itemName}}</text>
@@ -453,10 +454,16 @@ export default {
     },
     //商品跳转
     toGoods (e) {
-      uni.showToast({ title: '商品' + e.goods_id, icon: 'none' });
+      // uni.showToast({ title: '商品' + e.goods_id, icon: 'none' });
+      // uni.navigateTo({
+      //   url: '../../goods/goods?ptypeId=' + e.goodsId
+      // })
+      this.toGoodsNav(e.goodsId)
+    },
+    toGoodsNav (id) {
       uni.navigateTo({
-        url: '../../goods/goods'
-      });
+        url: '../../goods/goods?ptypeId=' + id
+      })
     },
     //轮播图指示器
     swiperChange (event) {
