@@ -50,5 +50,56 @@ const ENUM_TASK_BAR = {
 	}
 }
 
+const ENUM_ORDER_STAUTS = {
+	CANCELED: {
+		name: '已取消',
+		code: 0,
+		index: null
+	},
+	UN_PAY: {
+		name: '未付款',
+		code: 10,
+		index: 1
+	},
+	PAID: {
+		name: '已付款',
+		code: 20,
+		index: 2
+	},
+	RETURN: {
+		name: '退款/换货',
+		code: 30,
+		index: 5
+	},
+	SHIPPED: {
+		name: '已发货',
+		code: 40,
+		index: 3
+	},
+	SUCCESS: {
+		name: '交易成功',
+		code: 50,
+		index: 4
+	},
+	CLOSED: {
+		name: '已关闭',
+		code: 60,
+		index: null
+	},
+	ALL: {
+		name: '全部',
+		code: 100,
+		index: 0
+	},
+	getName (code) {
+		for (let i in this) {
+			if (this[i].code === code) {
+				return this[i].name
+			}
+		}
+		return ''
+	}
+}
 
-export { ENUM_STATUS, ENUM_GOODS_COLUMN, ENUM_ORDER, ENUM_TASK_BAR }
+
+export { ENUM_STATUS, ENUM_GOODS_COLUMN, ENUM_ORDER, ENUM_TASK_BAR, ENUM_ORDER_STAUTS }

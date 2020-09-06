@@ -518,6 +518,14 @@ export default {
 
       let sw = true
       let repeatJSON = Util.getShoppingCartInf()
+      // 检测是否超过
+      if (repeatJSON.length >= 100) {
+        uni.showToast({
+          title: "购物不可以种类超过100",
+          icon: "none"
+        })
+        return
+      }
       repeatJSON.forEach(element => {
         if (element.id == this.goodsData.id) {
           element.number += this.goodsData.number
