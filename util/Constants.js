@@ -101,5 +101,51 @@ const ENUM_ORDER_STAUTS = {
 	}
 }
 
+const ENUM_CONFIRM_TYPE = {
+	BUY: {
+		name: '购买',
+		code: 'buy'
+	},
+	CART: {
+		name: '购物车',
+		code: 'cart'
+	}
+}
 
-export { ENUM_STATUS, ENUM_GOODS_COLUMN, ENUM_ORDER, ENUM_TASK_BAR, ENUM_ORDER_STAUTS }
+const ENUM_SHIPPING_METHOD = {
+	SELECT: {
+		name: '请选择',
+		code: 'select'
+	},
+	LOGITICS: {
+		name: '物流托运部',
+		code: 'logitics'
+	},
+	SF: {
+		name: '顺丰',
+		code: 'sf'
+	},
+	POSTAL: {
+		name: '邮政',
+		code: 'postal'
+	},
+	ROUND_MAIL: {
+		name: '圆通',
+		code: 'round_mail'
+	},
+	SAME_CITY_MAIL: {
+		name: '同城送货',
+		code: 'same_city_mail'
+	},
+	BUS_EXPRESS: {
+		name: '大巴快运',
+		code: 'bus_express'
+	},
+	PICK_UP: {
+		name: '自提',
+		code: 'pick_up'
+	}
+}
+
+
+export { ENUM_STATUS, ENUM_GOODS_COLUMN, ENUM_ORDER, ENUM_TASK_BAR, ENUM_ORDER_STAUTS, ENUM_CONFIRM_TYPE, ENUM_SHIPPING_METHOD }

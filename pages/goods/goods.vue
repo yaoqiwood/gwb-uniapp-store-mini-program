@@ -138,7 +138,7 @@
     <view class="popup spec"
           :class="specClass"
           @touchmove.stop.prevent="discard"
-          @tap="hideSpec">
+          @tap="hidePop()">
       <!-- 遮罩层 -->
       <view class="mask"></view>
       <view class="layer"
@@ -173,7 +173,11 @@
         </view>
         <view class="btn">
           <view class="button"
+                v-if="checkCartEnum(confirmType)"
                 @tap="hideSpec">完成</view>
+          <view class="button"
+                v-else
+                @tap="tapToBuy">完成</view>
         </view>
       </view>
     </view>
@@ -270,6 +274,7 @@
 import GoodsApi from '@/api/goods/Goods'
 import MinioApi from '@/api/system/System'
 import Util from '@/util/Util'
+import { ENUM_CONFIRM_TYPE } from '@/util/Constants'
 export default {
   data () {
     return {
@@ -332,7 +337,8 @@ export default {
       ptypeId: '',
       //商品描述html
       // descriptionStr: '<div style="text-align:center;"><img width="100%" src="https://ae01.alicdn.com/kf/HTB1t0fUl_Zmx1VjSZFGq6yx2XXa5.jpg"/><img width="100%" src="https://ae01.alicdn.com/kf/HTB1LzkjThTpK1RjSZFKq6y2wXXaT.jpg"/><img width="100%" src="https://ae01.alicdn.com/kf/HTB18dkiTbvpK1RjSZPiq6zmwXXa8.jpg"/></div>'
-      descriptionStr: ''
+      descriptionStr: '',
+      confirmType: ENUM_CONFIRM_TYPE.CART.code
     }
   },
   onLoad (option) {
@@ -400,6 +406,7 @@ export default {
     },
     // 加入购物车
     joinCart () {
+      this.confirmType = ENUM_CONFIRM_TYPE.CART.code
       if (this.selectSpec == null) {
         return this.showSpec(() => {
           uni.showToast({ title: "已加入购物车" });
@@ -409,12 +416,13 @@ export default {
     },
     //立即购买
     buy () {
+      this.confirmType = ENUM_CONFIRM_TYPE.BUY.code
       if (this.selectSpec == null) {
         return this.showSpec(() => {
-          this.toConfirmation();
-        });
+          this.toConfirmation()
+        })
       }
-      this.toConfirmation();
+      this.toConfirmation()
     },
     //商品评论
     toRatings () {
@@ -425,7 +433,9 @@ export default {
     //跳转确认订单页面
     toConfirmation () {
       let tmpList = [];
-      let goods = { id: this.goodsData.id, img: '../../static/img/goods/p1.jpg', name: this.goodsData.name, spec: '规格:' + this.goodsData.spec[this.selectSpec], price: this.goodsData.price, number: this.goodsData.number };
+      let swiper = this.swiperList[0]
+      // console.log(this.goodsData.id)
+      let goods = { id: this.goodsData.id, img: this.getMinioImg(swiper.storagePath, swiper.newAnnexName), name: this.goodsData.name, price: this.goodsData.price, number: this.goodsData.number };
       tmpList.push(goods);
       uni.setStorage({
         key: 'buylist',
@@ -478,7 +488,7 @@ export default {
         this.anchorlist[1].top = data.top - headerHeight - statusbarHeight;
         this.anchorlist[2].top = data.bottom - headerHeight - statusbarHeight;
 
-      }).exec();
+      }).exec()
     },
     //返回上一页
     back () {
@@ -505,11 +515,19 @@ export default {
     specCallback () {
       return;
     },
+    hidePop () {
+      this.specClass = 'hide'
+      //回调
+      this.selectSpec && this.specCallback && this.specCallback();
+      this.specCallback = false
+      setTimeout(() => {
+        this.specClass = 'none'
+      }, 200)
+    },
     //关闭规格弹窗
     hideSpec () {
       this.specClass = 'hide';
       //回调
-
       this.selectSpec && this.specCallback && this.specCallback();
       this.specCallback = false;
       setTimeout(() => {
@@ -573,6 +591,15 @@ export default {
     },
     getShoppingCartInf () {
       return Util.getShoppingCartInf()
+    },
+    checkCartEnum (code) {
+      return code === ENUM_CONFIRM_TYPE.CART.code
+    },
+    checkBuyEnum (code) {
+      return code === ENUM_CONFIRM_TYPE.BUY.code
+    },
+    tapToBuy () {
+      this.toConfirmation()
     }
   }
 };

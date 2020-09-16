@@ -109,7 +109,7 @@
         <!--		大标题		-->
         <view class="hot_goods">
           <image src="/static/img/gwb-img/shouye_rmsp.png"></image>
-        </view>
+        </view
         <!--		内容		-->
         <view class="hot_goods_frame">
           <view class="hot_items"

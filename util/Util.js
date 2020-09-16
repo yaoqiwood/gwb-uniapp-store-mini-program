@@ -35,6 +35,17 @@ const util = {
 		}
 		return JSON.parse(this.getSession("shoppingCart"))
 	},
+	// 设定默认地址选定
+	setDefaultAddress (address) {
+		this.setSession("defaultAddress", JSON.stringify(address))
+	},
+	// 获取默认地址选定
+	getDefaultAddress () {
+		if (this.getSession("defaultAddress") === null || this.getSession("defaultAddress") === '') {
+			return null;
+		}
+		return JSON.parse(this.getSession("defaultAddress"))
+	},
 	getSession (key) {
 		return uni.getStorageSync(key);
 	},
