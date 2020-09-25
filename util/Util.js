@@ -29,6 +29,9 @@ const util = {
 	setShopingCartInf (params) {
 		this.setSession("shoppingCart", JSON.stringify(params))
 	},
+	emptyShoppingCartInf () {
+		this.setSession("shoppingCart", [])
+	},
 	getShoppingCartInf () {
 		if (null == this.getSession("shoppingCart") || '' == this.getSession('shoppingCart')) {
 			return []

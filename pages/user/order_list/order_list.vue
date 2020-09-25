@@ -24,14 +24,15 @@
         <view class="row"
               v-for="(row,index) in list"
               :key="index">
-          <view>订单号：{{row.momId}}</view>
+          <view>订单号：{{row.orderNo}}</view>
           <view class="type">{{typeText[row.type]}}</view>
           <view class="order-info"
                 v-for="(rowSecond,rowIndex) in row.mallOrderItemList"
                 :key="rowIndex">
             <view class="left">
               <!-- <image :src="row.img"></image> -->
-              <image :src="rowSecond.ptypeCover"></image>
+              <image style="width:90px;height:90px"
+                     :src="rowSecond.ptypeCover"></image>
             </view>
             <view class="right">
               <view class="name">
@@ -47,9 +48,9 @@
           </view>
           <view class="detail">
             <view class="number">共{{row.mallOrderItemList.length}}件商品</view>
-            <view class="sum">合计￥<view class="price">{{row.payment}}</view>
+            <view class="sum">合计￥<view class="price">{{row.orderSumPrice}}元</view>
             </view>
-            <view class="nominal">(含运费 ￥{{row.postage}})</view>
+            <!-- <view class="nominal">(含运费 ￥{{row.postage}})</view> -->
           </view>
           <view class="btns">
             <block v-if="checkUnpayEnum(row.status)">

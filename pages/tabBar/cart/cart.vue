@@ -144,7 +144,7 @@ export default {
     this.getCartInf()
   },
   onHide () {
-    this.setCartInf()
+    // this.setCartInf()
   },
   methods: {
     //加入商品 参数 goods:商品数据
@@ -233,6 +233,7 @@ export default {
       let len = this.goodsList.length;
       for (let i = 0; i < len; i++) {
         if (this.goodsList[i].selected) {
+          this.goodsList[i].img = this.goodsList[i].imgUrl
           tmpList.push(this.goodsList[i]);
         }
       }
@@ -247,6 +248,15 @@ export default {
         key: 'buylist',
         data: tmpList,
         success: () => {
+          // Util.emptyShoppingCartInf()
+          tmpList.forEach(element => {
+            let array = Util.getShoppingCartInf()
+            array.splice(this.indexOfTempList(Util.getShoppingCartInf(), element), 1)
+            Util.setShopingCartInf(array)
+          })
+          this.isAllselected = false
+          this.sumPrice = 0
+          this.selectedList = []
           uni.navigateTo({
             url: '../../order/confirmation'
           })
@@ -268,7 +278,7 @@ export default {
       this.theIndex = null;
       Util.setShopingCartInf(this.goodsList)
     },
-    // 删除商品s
+    // 删除商品
     deleteList () {
       let len = this.selectedList.length;
       while (this.selectedList.length > 0) {
@@ -330,12 +340,21 @@ export default {
       //丢弃
     },
     getCartInf () {
-      if (null != Util.getShoppingCartInf() && Util.getShoppingCartInf() != '') {
-        this.goodsList = Util.getShoppingCartInf()
-      }
+      this.goodsList = Util.getShoppingCartInf()
     },
     setCartInf () {
       Util.setShopingCartInf(this.goodsList)
+    },
+    indexOfTempList (tmpList, el) {
+      let index = 0
+      tmpList.forEach(element => {
+        if (element.id === el.id) {
+          return
+        }
+        index += 1
+      })
+      console.log(index)
+      return index
     }
   }
 }
