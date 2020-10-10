@@ -273,6 +273,7 @@
 <script>
 import GoodsApi from '@/api/goods/Goods'
 import MinioApi from '@/api/system/System'
+import MallFavoritesApi from '@/api/favorites/MallFavorites'
 import Util from '@/util/Util'
 import { ENUM_CONFIRM_TYPE } from '@/util/Constants'
 export default {
@@ -329,8 +330,7 @@ export default {
           { name: "7天退换", description: "此商品享受7天无理由退换服务" }
         ],
         spec: [],
-        comment: {
-        }
+        comment: {}
       },
       selectSpec: null,//选中规格
       isKeep: false,//收藏
@@ -350,6 +350,9 @@ export default {
     // #endif
     //option为object类型，会序列化上个页面传递的参数
     // console.log(option.cid); //打印出上个页面传递的参数。
+  },
+  onUnload () {
+    this.addOrCancelFavoritesItem()
   },
   onReady () {
     // this.calcAnchor();//计算锚点高度，页面数据是ajax加载时，请把此行放在数据渲染完成事件中执行以保证高度计算正确
@@ -584,6 +587,7 @@ export default {
         }
         this.goodsData = json
         this.descriptionStr = resp.ptypeDetail.detail
+        this.isKeep = resp.isFavorite
       })
     },
     getMinioImg (storagePath, newName) {
@@ -600,6 +604,17 @@ export default {
     },
     tapToBuy () {
       this.toConfirmation()
+    },
+    addOrCancelFavoritesItem () {
+      let params = {
+        ptypeid: this.goodsData.id,
+        pfullname: this.goodsData.name,
+        pcover: this.getMinioImg(this.swiperList[0].storagePath, this.swiperList[0].newAnnexName),
+        price: this.goodsData.price,
+        bool: this.isKeep
+      }
+      MallFavoritesApi.addOrCancelFavoritesItem(params).then(resp => {
+      })
     }
   }
 };

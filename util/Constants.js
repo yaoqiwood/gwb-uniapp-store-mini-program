@@ -69,7 +69,7 @@ const ENUM_ORDER_STAUTS = {
 	RETURN: {
 		name: '退款/换货',
 		code: 30,
-		index: 5
+		index: 4
 	},
 	SHIPPED: {
 		name: '已发货',
@@ -79,12 +79,12 @@ const ENUM_ORDER_STAUTS = {
 	SUCCESS: {
 		name: '交易成功',
 		code: 50,
-		index: 4
+		index: null
 	},
 	CLOSED: {
 		name: '已关闭',
 		code: 60,
-		index: null
+		index: 5
 	},
 	ALL: {
 		name: '全部',

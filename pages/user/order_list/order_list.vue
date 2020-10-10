@@ -80,7 +80,7 @@
               <view class="default">查看进度</view>
             </block>
             <block v-if="checkCanceledEnum(row.status)">
-              <view class="default">已取消</view>
+              <view class="default">已关闭</view>
             </block>
           </view>
         </view>
@@ -105,7 +105,7 @@ export default {
         refunds: '商品退货处理中',
         cancelled: '订单已取消'
       },
-      orderType: ['全部', '待付款', '待发货', '待收货', '待评价', '退换货'],
+      orderType: ['全部', '待付款', '待发货', '待收货', '退换货', '已关闭'],
       //订单列表 演示数据
       orderList: [
         // [
@@ -173,9 +173,7 @@ export default {
       }
       // this.list = this.orderList[tbIndex];
     },
-    showLogistics (row) {
-
-    },
+    showLogistics (row) { },
     remindDeliver (row) {
       uni.showToast({
         title: '已提醒商家发货'
@@ -187,10 +185,10 @@ export default {
         content: '确定取消此订单？',
         success: (res) => {
           if (res.confirm) {
-            console.log('用户点击确定');
+            // console.log('用户点击确定');
             this.doCancelOrder(row.ordersn);
           } else if (res.cancel) {
-            console.log('用户点击取消');
+            // console.log('用户点击取消');
           }
         }
       });
@@ -259,7 +257,7 @@ export default {
       return ENUM_ORDER_STAUTS.RETURN.code === parseInt(code)
     },
     checkCanceledEnum (code) {
-      return ENUM_ORDER_STAUTS.CANCELED.code === parseInt(code)
+      return ENUM_ORDER_STAUTS.CLOSED.code === parseInt(code)
     }
 
   }
