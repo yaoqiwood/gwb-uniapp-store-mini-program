@@ -249,11 +249,18 @@ export default {
         data: tmpList,
         success: () => {
           // Util.emptyShoppingCartInf()
-          tmpList.forEach(element => {
-            let array = Util.getShoppingCartInf()
-            array.splice(this.indexOfTempList(Util.getShoppingCartInf(), element), 1)
+          let tempNewList = tmpList
+          let array = Util.getShoppingCartInf()
+          // 倒叙删除（修改）
+          // tempNewList.forEach(element => {
+          //   array.splice(this.indexOfTempList(array, element), 1)
+          //   console.log(array)
+          //   Util.setShopingCartInf(array)
+          // })
+          for (let i = tempNewList.length - 1; i >= 0; i--) {
+            array.splice(this.indexOfTempList(array, tempNewList[i]), 1)
             Util.setShopingCartInf(array)
-          })
+          }
           this.isAllselected = false
           this.sumPrice = 0
           this.selectedList = []
@@ -353,7 +360,6 @@ export default {
         }
         index += 1
       })
-      console.log(index)
       return index
     }
   }

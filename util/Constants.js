@@ -141,6 +141,10 @@ const ENUM_SHIPPING_METHOD = {
 		name: '大巴快运',
 		code: 'bus_express'
 	},
+	MOTOR_BIKE: {
+		name: '摩托车',
+		code: 'motor_bike'
+	},
 	PICK_UP: {
 		name: '自提',
 		code: 'pick_up'

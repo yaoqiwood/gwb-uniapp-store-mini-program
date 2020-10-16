@@ -21,7 +21,7 @@
               :key="index">
           <!-- 删除按钮 -->
           <view class="menu"
-                @tap.stop="deleteCoupon(row.id,goodsList)">
+                @tap.stop="deleteCoupon(row)">
             <view class="icon shanchu"></view>
           </view>
           <!-- content -->
@@ -37,12 +37,13 @@
               </view>
               <view class="info">
                 <view class="title">{{row.name}}</view>
+                <view></view>
                 <view class="price-number">
-                  <view class="keep-num">
+                  <!-- <view class="keep-num">
                     905人收藏
-                  </view>
+                  </view> -->
+                  <view></view>
                   <view class="price">￥{{row.price}}</view>
-
                 </view>
               </view>
             </view>
@@ -84,40 +85,44 @@
 </template>
 
 <script>
-
+import MallFavoritesApi from '@/api/favorites/MallFavorites'
 export default {
   data () {
     return {
       goodsList: [
-        { id: 1, img: '/static/img/goods/p1.jpg', name: '商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题', spec: '规格:S码', price: 127.5, number: 1, selected: false },
-        { id: 2, img: '/static/img/goods/p1.jpg', name: '商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题', spec: '规格:S码', price: 127.5, number: 1, selected: false },
-        { id: 3, img: '/static/img/goods/p1.jpg', name: '商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题', spec: '规格:S码', price: 127.5, number: 1, selected: false },
+        // { id: 1, img: '/static/img/goods/p1.jpg', name: '商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题', spec: '规格:S码', price: 127.5, number: 1, selected: false },
+        // { id: 2, img: '/static/img/goods/p1.jpg', name: '商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题', spec: '规格:S码', price: 127.5, number: 1, selected: false },
+        // { id: 3, img: '/static/img/goods/p1.jpg', name: '商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题', spec: '规格:S码', price: 127.5, number: 1, selected: false },
       ],
-      shopList: [
-        { id: 1, name: "冰鲜专卖店", img: "/static/img/shop/1.jpg" },
-        { id: 2, name: "果蔬天下", img: "/static/img/shop/2.jpg" },
-        { id: 3, name: "办公耗材用品店", img: "/static/img/shop/3.jpg" },
-        { id: 4, name: "天天看好书", img: "/static/img/shop/4.jpg" }
-      ],
+      // shopList: [
+      //   { id: 1, name: "冰鲜专卖店", img: "/static/img/shop/1.jpg" },
+      //   { id: 2, name: "果蔬天下", img: "/static/img/shop/2.jpg" },
+      //   { id: 3, name: "办公耗材用品店", img: "/static/img/shop/3.jpg" },
+      //   { id: 4, name: "天天看好书", img: "/static/img/shop/4.jpg" }
+      // ],
       headerTop: 0,
       //控制滑动效果
       typeClass: 'goods',
       subState: '',
       theIndex: null,
       oldIndex: null,
-      isStop: false
+      isStop: false,
+      pageNo: 1,
+      pageSize: 10,
+      recordTotal: 10
     }
   },
   onPageScroll (e) {
-
   },
   //下拉刷新，需要自己在page.json文件中配置开启页面下拉刷新 "enablePullDownRefresh": true
   onPullDownRefresh () {
+    let that = this
     setTimeout(function () {
       uni.stopPullDownRefresh();
     }, 1000);
   },
   onLoad () {
+    this.getMallFavoritesByPage()
     //兼容H5下排序栏位置
     // #ifdef H5
     //定时器方式循环获取高度为止，这么写的原因是onLoad中head未必已经渲染出来。
@@ -129,6 +134,9 @@ export default {
       }
     }, 1);
     // #endif
+  },
+  onReachBottom () {
+    this.getMallFavoritesByPage()
   },
   methods: {
     switchType (type) {
@@ -191,29 +199,65 @@ export default {
         }
       }
     },
-
     touchEnd (index, $event) {
       //解除禁止触发状态
       this.isStop = false;
     },
-
     //删除商品
-    deleteCoupon (id, List) {
-      let len = List.length;
-      for (let i = 0; i < len; i++) {
-        if (id == List[i].id) {
-          List.splice(i, 1);
-          break;
-        }
+    deleteCoupon (row) {
+      // let len = List.length;
+      // for (let i = 0; i < len; i++) {
+      //   if (id == List[i].id) {
+      //     List.splice(i, 1);
+      //     break;
+      //   }
+      // }
+      // this.oldIndex = null;
+      // this.theIndex = null;
+      let params = {
+        mfId: row.id,
+        ptypeid: row.ptypeId,
+        bool: false
       }
-      this.oldIndex = null;
-      this.theIndex = null;
+      MallFavoritesApi.addOrCancelFavoritesItem(params)
+      this.goodsList = []
+      this.pageNo = 0
+      this.getMallFavoritesByPage()
     },
-
     discard () {
       //丢弃
+    },
+    getMallFavoritesByPage () {
+      let length = this.goodsList.length
+      if (length === this.recordTotal) {
+        return
+      }
+      MallFavoritesApi.getMallFavoritesByPage({ pageNo: this.pageNo, pageSize: this.pageSize }).then(resp => {
+        this.recordTotal = resp.total
+        let records = resp.records.map(item => {
+          return {
+            id: item.mfId,
+            ptypeId: item.ptypeid,
+            img: item.pcover,
+            name: item.pfullname,
+            price: item.price
+          }
+        })
+        records.forEach(item => {
+          this.goodsList.push(item)
+        })
+        this.pageNo++
+        this.theIndex = null
+        // { id: 1, img: '/static/img/goods/p1.jpg', name: '商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题', spec: '规格:S码', price: 127.5, number: 1, selected: false },
+        // { id: 2, img: '/static/img/goods/p1.jpg', name: '商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题', spec: '规格:S码', price: 127.5, number: 1, selected: false },
+        // { id: 3, img: '/static/img/goods/p1.jpg', name: '商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题', spec: '规格:S码', price: 127.5, number: 1, selected: false },
+      })
+    },
+    toGoods (row) {
+      uni.navigateTo({
+        url: '../../goods/goods?ptypeId=' + row.ptypeId
+      })
     }
-
 
   }
 }

@@ -121,7 +121,6 @@
       </view> -->
     </view>
     <view class="blck">
-
     </view>
     <view class="footer">
       <view class="settlement">
@@ -246,7 +245,8 @@ export default {
           uni.showToast({ title: '服务端出错，请联系管理员解决', icon: 'none' })
           return
         }
-
+        // console.log(resp)
+        Util.setMallOrderMainSession(resp)
         uni.setStorage({
           key: 'paymentOrder',
           data: paymentOrder,

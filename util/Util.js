@@ -38,6 +38,18 @@ const util = {
 		}
 		return JSON.parse(this.getSession("shoppingCart"))
 	},
+	setPaymentInf (params) {
+		this.setSession("paymentOrder", params)
+	},
+	getPaymentInf () {
+		return this.getSession("paymentOrder")
+	},
+	setMallOrderMainSession (params) {
+		this.setSession("mallOrderMain", params)
+	},
+	getMallOrderMainSession () {
+		return this.getSession("mallOrderMain")
+	},
 	// 设定默认地址选定
 	setDefaultAddress (address) {
 		this.setSession("defaultAddress", JSON.stringify(address))

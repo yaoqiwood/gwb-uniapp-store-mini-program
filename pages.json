@@ -231,6 +231,8 @@
         "navigationBarTitleText": "我的收藏",
         "navigationBarBackgroundColor": "#FF3E3E",
         "navigationBarTextStyle": "white",
+        "enablePullDownRefresh": true,
+        "onReachBottomDistance": 50,
         "app-plus": {
           "bounce": "none"
         }

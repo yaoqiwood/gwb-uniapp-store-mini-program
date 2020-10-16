@@ -91,6 +91,7 @@
 <script>
 import OrderListApi from '@/api/orderList/OrderList'
 import { ENUM_ORDER_STAUTS } from '@/util/Constants'
+import Util from '@/util/Util'
 export default {
   data () {
     return {
@@ -107,34 +108,7 @@ export default {
       },
       orderType: ['全部', '待付款', '待发货', '待收货', '退换货', '已关闭'],
       //订单列表 演示数据
-      orderList: [
-        // [
-        //   { type: "unpaid", ordersn: 0, goods_id: 0, img: '/static/img/goods/p1.jpg', name: '商品名称商品名称商品名称商品名称商品名称', price: '168.00', payment: 168.00, freight: 12.00, spec: '规格:S码', numner: 1 },
-        //   { type: "unpaid", ordersn: 1, goods_id: 1, img: '/static/img/goods/p2.jpg', name: '商品名称商品名称商品名称商品名称商品名称', price: '168.00', payment: 168.00, freight: 12.00, spec: '规格:S码', numner: 1 },
-        //   { type: "back", ordersn: 2, goods_id: 1, img: '/static/img/goods/p3.jpg', name: '商品名称商品名称商品名称商品名称商品名称', price: '168.00', payment: 168.00, freight: 12.00, spec: '规格:S码', numner: 1 },
-        //   { type: "unreceived", ordersn: 3, goods_id: 1, img: '/static/img/goods/p4.jpg', name: '商品名称商品名称商品名称商品名称商品名称', price: '168.00', payment: 168.00, freight: 12.00, spec: '规格:S码', numner: 1 },
-        //   { type: "received", ordersn: 4, goods_id: 1, img: '/static/img/goods/p5.jpg', name: '商品名称商品名称商品名称商品名称商品名称', price: '168.00', payment: 168.00, freight: 12.00, spec: '规格:S码', numner: 1 },
-        //   { type: "completed", ordersn: 5, goods_id: 1, img: '/static/img/goods/p6.jpg', name: '商品名称商品名称商品名称商品名称商品名称', price: '168.00', payment: 168.00, freight: 12.00, spec: '规格:S码', numner: 1 },
-        //   { type: "refunds", ordersn: 6, goods_id: 1, img: '/static/img/goods/p5.jpg', name: '商品名称商品名称商品名称商品名称商品名称', price: '￥168', payment: 168.00, freight: 12.00, spec: '规格:S码', numner: 1 },
-        //   { type: "cancelled", ordersn: 7, goods_id: 1, img: '/static/img/goods/p5.jpg', name: '商品名称商品名称商品名称商品名称商品名称', price: '￥168', payment: 168.00, freight: 12.00, spec: '规格:S码', numner: 1 }
-        // ],
-        // [
-        //   { type: "unpaid", ordersn: 0, goods_id: 0, img: '/static/img/goods/p1.jpg', name: '商品名称商品名称商品名称商品名称商品名称', price: '￥168', payment: 168.00, freight: 12.00, spec: '规格:S码', numner: 1 },
-        //   { type: "unpaid", ordersn: 1, goods_id: 1, img: '/static/img/goods/p2.jpg', name: '商品名称商品名称商品名称商品名称商品名称', price: '￥168', payment: 168.00, freight: 12.00, spec: '规格:S码', numner: 1 }
-        // ],
-        // [
-        //   //无
-        // ],
-        // [
-        //   { type: "unreceived", ordersn: 3, goods_id: 1, img: '/static/img/goods/p4.jpg', name: '商品名称商品名称商品名称商品名称商品名称', price: '￥168', payment: 168.00, freight: 12.00, spec: '规格:S码', numner: 1 }
-        // ],
-        // [
-        //   { type: "received", ordersn: 4, goods_id: 1, img: '/static/img/goods/p5.jpg', name: '商品名称商品名称商品名称商品名称商品名称', price: '￥168', payment: 168.00, freight: 12.00, spec: '规格:S码', numner: 1 }
-        // ],
-        // [
-        //   { type: "refunds", ordersn: 6, goods_id: 1, img: '/static/img/goods/p5.jpg', name: '商品名称商品名称商品名称商品名称商品名称', price: '￥168', payment: 168.00, freight: 12.00, spec: '规格:S码', numner: 1 }
-        // ]
-      ],
+      orderList: [],
       list: [],
       tabbarIndex: 0,
       pageStep: 1,
@@ -206,7 +180,6 @@ export default {
       //       }
       //     }
       //   }
-
       // }
     },
     toPayment (row) {
@@ -214,8 +187,17 @@ export default {
       uni.showLoading({
         title: '正在获取订单...'
       })
-      let paymentOrder = [];
-      paymentOrder.push(row);
+      let paymentOrder = []
+      let map = row.mallOrderItemList.map(item => {
+        return {
+          moiId: item.moiId,
+          name: item.ptypePfullname,
+          number: item.quantity,
+          price: item.price
+        }
+      })
+      Util.setMallOrderMainSession(row)
+      paymentOrder = map
       setTimeout(() => {
         uni.setStorage({
           key: 'paymentOrder',
@@ -223,14 +205,23 @@ export default {
           success: () => {
             uni.hideLoading();
             uni.navigateTo({
-              url: '../../pay/payment/payment?amount=' + row.payment
+              url: '../../pay/payment/payment?amount=' + row.orderSumPrice
             })
           }
         })
       }, 500)
     },
     getMallOrderMainDto () {
-      this.loadData(this.pageStep, this.pageSize, ENUM_ORDER_STAUTS.ALL.code)
+      let type = ENUM_ORDER_STAUTS.ALL.code
+      for (let index in ENUM_ORDER_STAUTS) {
+        if (ENUM_ORDER_STAUTS[index].index === this.tabbarIndex) {
+          type = ENUM_ORDER_STAUTS[index].code
+        }
+      }
+      uni.showLoading({
+        title: '正在获取订单...'
+      })
+      this.loadData(this.pageStep, this.pageSize, type)
     },
     loadData (pageStep, pageSize, status) {
       OrderListApi.getMallOrderMainDto(pageStep, pageSize, status).then(resp => {
@@ -239,6 +230,8 @@ export default {
         } else {
           this.list = []
         }
+        //延时关闭  加载中的 loading框
+        uni.hideLoading()
       })
     },
     checkUnpayEnum (code) {
