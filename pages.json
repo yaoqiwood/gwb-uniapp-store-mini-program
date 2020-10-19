@@ -193,15 +193,15 @@
     //     }
     //   }
     // },
-    {
-      "path": "pages/msg/msg",
-      "style": {
-        "enablePullDownRefresh": true,
-        "navigationBarTitleText": "消息列表",
-        "navigationBarBackgroundColor": "#FF3E3E",
-        "navigationBarTextStyle": "white"
-      }
-    },
+    // {
+    //   "path": "pages/msg/msg",
+    //   "style": {
+    //     "enablePullDownRefresh": true,
+    //     "navigationBarTitleText": "消息列表",
+    //     "navigationBarBackgroundColor": "#FF3E3E",
+    //     "navigationBarTextStyle": "white"
+    //   }
+    // },
     {
       "path": "pages/msg/chat/chat",
       "style": {
@@ -277,7 +277,7 @@
     {
       "path": "pages/pay/success/success",
       "style": {
-        "navigationBarBackgroundColor": "#ffffff",
+        "navigationBarBackgroundColor": "#f8f8f8",
         "navigationBarTitleText": "支付成功",
         "backgroundColorTop": "#ffffff",
         "backgroundColorBottom": "#ffffff"
@@ -290,6 +290,15 @@
         "enablePullDownRefresh": true,
         "onReachBottomDistance": 50,
         "backgroundColorTop": "#ffffff",
+        "backgroundColorBottom": "#ffffff"
+      }
+    },
+    {
+      "path":"pages/express/ExpressPage",
+      "style": {
+        "navigationBarTitleText": "物流查看",
+        "navigationBarBackgroundColor": "#f8f8f8",
+        "backgroundColorTop": "#f3f3f3",
         "backgroundColorBottom": "#ffffff"
       }
     }

@@ -147,7 +147,11 @@ export default {
       }
       // this.list = this.orderList[tbIndex];
     },
-    showLogistics (row) { },
+    showLogistics (row) {
+      uni.navigateTo({
+        url: '../../express/ExpressPage?orderNo=' + row.orderNo
+      })
+    },
     remindDeliver (row) {
       uni.showToast({
         title: '已提醒商家发货'

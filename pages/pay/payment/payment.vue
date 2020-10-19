@@ -62,6 +62,7 @@
 <script>
 import Util from '@/util/Util'
 import PaymentApi from '@/api/wxPayment/WxPayment'
+import OrderApi from '@/api/order/main/OrderMain'
 export default {
   data () {
     return {
@@ -91,6 +92,7 @@ export default {
   },
   methods: {
     doDeposit () {
+      let that = this
       //模板模拟支付，实际应用请调起微信/支付宝
       uni.showLoading({
         title: '支付中...'
@@ -99,7 +101,7 @@ export default {
       let params = {
         momId: obj.momId,
         orderNo: obj.orderNo,
-        orderSumPrice: obj.orderSumPrice
+        orderSumPrice: parseFloat(obj.orderSumPrice).toFixed(2)
       }
       PaymentApi.doOrderUnifiedorder(params).then(resp => {
         // console.log(resp)\
@@ -111,12 +113,16 @@ export default {
           signType: 'MD5',
           paySign: resp.paySign,
           success: function (res) {
-            console.log('success:' + JSON.stringify(res));
+            // console.log('success:' + JSON.stringify(res));
+            uni.showLoading({
+              title: '正在等待返回订单支付结果'
+            })
+            that.checkOrderMainPaidStatus(3000, params)
           },
           fail: function (err) {
             console.log('fail:' + JSON.stringify(err));
           }
-        });
+        })
       })
       // setTimeout(() => {
       //   uni.hideLoading();
@@ -129,6 +135,33 @@ export default {
       //     });
       //   }, 300);
       // }, 700)
+    },
+    /**
+     * 轮询查当前是否支付成功,若没成功则double时间询问
+     */
+    checkOrderMainPaidStatus (timeOut, params) {
+      let that = this
+      uni.showLoading({
+        title: '等待支付结果'
+      })
+      setTimeout(() => {
+        OrderApi.checkOrderMainPaidStatus(params.orderNo).then(resp => {
+          if (!resp.payStatus) {
+            that.checkOrderMainPaidStatus(timeOut * 2, params)
+            return
+          }
+          uni.hideLoading()
+          uni.showToast({
+            title: '支付成功',
+            icon: 'success'
+          })
+          setTimeout(() => {
+            uni.redirectTo({
+              url: "../success/success?amount=" + params.orderSumPrice
+            })
+          }, 200)
+        })
+      }, timeOut)
     }
   }
 }
