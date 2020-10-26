@@ -172,19 +172,7 @@ export default {
       });
     },
     doCancelOrder (ordersn) {
-      let typeNum = this.orderList.length;
-      // for (let i = 0; i < typeNum; i++) {
-      //   let list = this.orderList[i];
-      //   let orderNum = list.length;
-      //   if (orderNum > 0 && list[0].type == 'unpaid') {
-      //     for (let j = 0; j < orderNum; j++) {
-      //       if (this.orderList[i][j].ordersn == ordersn) {
-      //         this.orderList[i][j].type = 'cancelled';
-      //         break;
-      //       }
-      //     }
-      //   }
-      // }
+      let typeNum = this.orderList.length
     },
     toPayment (row) {
       //本地模拟订单提交UI效果
@@ -194,6 +182,7 @@ export default {
       let paymentOrder = []
       let map = row.mallOrderItemList.map(item => {
         return {
+          id: item.moiId,
           moiId: item.moiId,
           name: item.ptypePfullname,
           number: item.quantity,

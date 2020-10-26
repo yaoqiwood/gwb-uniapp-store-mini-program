@@ -245,13 +245,15 @@ export default {
           uni.showToast({ title: '服务端出错，请联系管理员解决', icon: 'none' })
           return
         }
-        // console.log(resp)
+        for (const iterator of paymentOrder) {
+          iterator.id = resp.mallOrderItemList[0].moiId
+        }
         Util.setMallOrderMainSession(resp)
         uni.setStorage({
           key: 'paymentOrder',
           data: paymentOrder,
           success: () => {
-            uni.hideLoading();
+            uni.hideLoading()
             uni.redirectTo({
               url: "../pay/payment/payment?amount=" + this.sumPrice
             })
