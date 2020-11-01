@@ -1,6 +1,6 @@
 <template>
   <view>
-    <view v-if="switch2Display"
+    <view v-if="switch2Display || defaultDisplay"
           class="layer"
           @click="closeModal">
       <view class="modal">
@@ -23,6 +23,7 @@
 <script>
 import Util from '@/util/Util'
 import SystemApi from '@/api/system/System'
+import { ENUM_STATUS } from "@/util/Constants"
 
 export default {
   props: {
@@ -30,7 +31,8 @@ export default {
   },
   data: () => {
     return {
-      switch2Display: false
+      switch2Display: false,
+      defaultDisplay: false
     }
   },
   onLoad () {
@@ -43,8 +45,9 @@ export default {
     closeModal () {
       this.switch2Display = false
     },
-    openModal () {
+    openModal (mode = false) {
       this.switch2Display = true
+      this.defaultDisplay = mode
     },
     getWxUserInf (e) {
       if (!e.detail.userInfo) {
@@ -53,22 +56,27 @@ export default {
       uni.getUserInfo({
         provider: 'weixin',
         success: (infoRes) => {
-          let obj = {
-            uid: Util.getCurrentUid(),
-            avatarUrl: infoRes.userInfo.avatarUrl,
-            city: infoRes.userInfo.city,
-            country: infoRes.userInfo.country,
-            gender: infoRes.userInfo.gender,
-            nickName: infoRes.userInfo.nickName,
-            province: infoRes.userInfo.province
-          }
+          let obj = Util.getCurrentUserInf()
+          // console.log(Util.getCurrentUserInf())
+          obj.uid = Util.getCurrentUid()
+          obj.avatarUrl = infoRes.userInfo.avatarUrl
+          obj.city = infoRes.userInfo.city
+          obj.country = infoRes.userInfo.country
+          obj.gender = infoRes.userInfo.gender
+          obj.nickName = infoRes.userInfo.nickName
+          obj.province = infoRes.userInfo.province
           SystemApi.wxUserInfUpdate(obj).then(resp => {
-            Util.setCurrentUserInf(JSON.stringify(obj))
+            obj.status = ENUM_STATUS.NOT_PHONE_NUM.code
+            Util.setCurrentUserInf(obj)
             Util.setObtainedStatus(true)
             uni.showToast({
               title: '授权成功'
             })
+            this.defaultDisplay = false
             this.$emit("setWxUserInf", obj)
+            uni.reLaunch({
+              url: '../home/home'
+            })
           })
         }
       })

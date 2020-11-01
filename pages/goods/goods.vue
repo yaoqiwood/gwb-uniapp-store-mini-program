@@ -267,16 +267,19 @@
       </view>
       <view class="holdPlace" />
     </view>
+    <wx-user-phone-modal ref="wxUserPhoneModal" />
   </view>
-</template>
+</template> 
 
 <script>
+import WxUserPhoneModal from '@/pages/widgets/WxUserPhoneModal'
 import GoodsApi from '@/api/goods/Goods'
 import MinioApi from '@/api/system/System'
 import MallFavoritesApi from '@/api/favorites/MallFavorites'
 import Util from '@/util/Util'
-import { ENUM_CONFIRM_TYPE } from '@/util/Constants'
+import { ENUM_CONFIRM_TYPE, ENUM_STATUS } from '@/util/Constants'
 export default {
+  components: { WxUserPhoneModal },
   data () {
     return {
       //控制渐变标题栏的参数
@@ -304,22 +307,6 @@ export default {
       shareClass: '',//分享弹窗css类，控制开关动画
       // 商品信息
       goodsData: {
-        // id: 1,
-        // name: "商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题",
-        // price: "127.00",
-        // number: 1,
-        // service: [
-        //   { name: "正品保证", description: "此商品官方保证为正品" },
-        //   { name: "极速退款", description: "此商品享受退货极速退款服务" },
-        //   { name: "7天退换", description: "此商品享受7天无理由退换服务" }
-        // ],
-        // spec: ["XS", "S", "M", "L", "XL", "XXL"],
-        // comment: {
-        //   number: 102,
-        //   userface: '../../static/img/face.jpg',
-        //   username: '大黑哥',
-        //   content: '很不错，之前买了很多次了，很好看，能放很久，和图片色差不大，值得购买！'
-        // }
         id: '',
         name: "",
         price: "",
@@ -347,6 +334,7 @@ export default {
     this.showBack = false;
     this.ptypeId = option.ptypeId
     this.selectPtypeById(option.ptypeId)
+    this.checkPhoneNum()
     // #endif
     //option为object类型，会序列化上个页面传递的参数
     // console.log(option.cid); //打印出上个页面传递的参数。
@@ -435,11 +423,16 @@ export default {
     },
     //跳转确认订单页面
     toConfirmation () {
+      // if (!Util.getCurrentUserInf().phoneNum) {
+      //   this.$refs['wxUserPhoneModal'].openModal()
+      //   this.hidePop()
+      //   return
+      // }
       let tmpList = [];
       let swiper = this.swiperList[0]
       // console.log(this.goodsData.id)
       let goods = { id: this.goodsData.id, img: this.getMinioImg(swiper.storagePath, swiper.newAnnexName), name: this.goodsData.name, price: this.goodsData.price, number: this.goodsData.number };
-      tmpList.push(goods);
+      tmpList.push(goods)
       uni.setStorage({
         key: 'buylist',
         data: tmpList,
@@ -615,6 +608,13 @@ export default {
       }
       MallFavoritesApi.addOrCancelFavoritesItem(params).then(resp => {
       })
+    },
+    checkPhoneNum () {
+      if (ENUM_STATUS.NOT_PHONE_NUM.code === Util.getCurrentUserInf().status.trim()) {
+        this.$refs['wxUserPhoneModal'].openModal()
+        // this.hidePop()
+        return
+      }
     }
   }
 };

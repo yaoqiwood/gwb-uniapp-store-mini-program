@@ -6,5 +6,8 @@ export default {
   },
   queryByItemNum (id) {
     return Util.get("/gwb/mallOrderMain/queryByItemNum", { itemNum: id })
+  },
+  cancelOrder (orderNum) {
+    return Util.put("/gwb/mallOrderMain/cancelOrder?orderNum=" + orderNum)
   }
 }

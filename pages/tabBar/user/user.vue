@@ -12,8 +12,8 @@
       <view class="input-box">
       </view>
       <view class="icon-btn">
-        <view class="icon tongzhi"
-              @tap="toMsg"></view>
+        <!-- <view class="icon tongzhi"
+              @tap="toMsg"></view> -->
         <view class="icon setting"
               @tap="toSetting"></view>
       </view>
@@ -26,13 +26,11 @@
       <!-- 头像 -->
       <view class="left">
         <image mode="aspectFill"
-               :src="user.face"
-               @tap="toSetting"></image>
+               :src="user.face"></image>
       </view>
       <!-- 昵称,个性签名 -->
       <view class="right">
-        <view class="username"
-              @tap="toLogin">{{user.username}}</view>
+        <view class="username">{{user.username}}</view>
         <view class="signature"
               v-if="user.signature"
               @tap="toSetting">{{user.signature}}</view>
@@ -124,6 +122,7 @@
 import Util from '@/util/Util'
 import SystemApi from '@/api/system/System'
 import AccountLoginModal from '../../widgets/AccountLoginModal'
+import { ENUM_STATUS } from '@/util/Constants'
 
 export default {
   data () {
@@ -183,10 +182,11 @@ export default {
     this.statusTop = e.scrollTop >= 0 ? null : -this.statusHeight + 'px';
   },
   onLoad () {
-    this.statusHeight = 0;
+    this.statusHeight = 0
     // #ifdef APP-PLUS
-    this.showHeader = false;
-    this.statusHeight = plus.navigator.getStatusbarHeight();
+    this.showHeader = false
+    this.statusHeight = plus.navigator.getStatusbarHeight()
+
     // #endif
   },
   onReady () {
@@ -197,7 +197,6 @@ export default {
       // 检查本地是否已经存在的用户信息
       this.getSessionUserInf()
     }
-
     // uni.setStorage({
     //   key: 'UserInfo',
     //   data: false,
@@ -208,6 +207,8 @@ export default {
     // });
   },
   onShow () {
+    //  检查用户状态
+    this.checkUserInfStatus()
     // uni.getStorage({
     //   key: 'UserInfo',
     //   success: (res) => {
@@ -285,12 +286,12 @@ export default {
     getSessionUserInf () {
       let obj = null
       if (Util.getCurrentUserInf()) {
-        obj = JSON.parse(Util.getCurrentUserInf())
-        this.userOb(obj)
+        obj = Util.getCurrentUserInf()
+        this.userObj(obj)
       } else {
         SystemApi.getWxUserInf().then(resp => {
           obj = resp
-          Util.setCurrentUserInf(JSON.stringify(obj))
+          Util.setCurrentUserInf(obj)
           this.userObj(obj)
         })
       }
@@ -313,6 +314,13 @@ export default {
         avatar: obj.avatarUrl
       }
       this.userObj(tempObj)
+    },
+    checkUserInfStatus () {
+      if (ENUM_STATUS.NOT_OBTAINED.code === Util.getCurrentUserInf().status.trim()) {
+        this.$refs['accountLoginModal'].openModal(true)
+        return false
+      }
+      return true
     }
   },
   components: {

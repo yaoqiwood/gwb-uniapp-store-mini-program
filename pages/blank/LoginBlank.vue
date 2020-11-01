@@ -22,7 +22,13 @@ export default {
       uni.hideLoading()
     })
   },
-  method: {}
+  methods: {
+    reNewUserInf () {
+      SystemApi.getWxUserInf().then(resp => {
+        Util.setCurrentUserInf(resp)
+      })
+    }
+  }
 }
 </script>
 <style lang="scss">

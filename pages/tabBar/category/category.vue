@@ -64,7 +64,7 @@
         </view>
       </scroll-view>
     </view>
-    <account-login-modal />
+    <account-login-modal ref="accountLoginModal" />
   </view>
 </template>
 <script>
@@ -73,7 +73,8 @@ import amap from '@/common/SDK/amap-wx.js';
 import CategoryApi from '@/api/category/Category'
 import SystemApi from '@/api/system/System'
 import AccountLoginModal from '../../widgets/AccountLoginModal'
-import { ENUM_TASK_BAR } from '@/util/Constants'
+import { ENUM_TASK_BAR, ENUM_STATUS } from '@/util/Constants'
+import Util from '@/util/Util'
 
 export default {
   data () {
@@ -82,22 +83,7 @@ export default {
       headerPosition: "fixed",
       city: "北京",
       //分类列表
-      categoryList: [
-        // {
-        //   id: 1, title: '家用电器', banner: '/static/img/category/banner.jpg', list: [
-        //     { name: '冰箱', img: '1.jpg' },
-        //     { name: '电视', img: '2.jpg' },
-        //     { name: '空调', img: '3.jpg' },
-        //     { name: '洗衣机', img: '4.jpg' },
-        //     { name: '风扇', img: '5.jpg' },
-        //     { name: '燃气灶', img: '6.jpg' },
-        //     { name: '热水器', img: '7.jpg' },
-        //     { name: '电吹风', img: '8.jpg' },
-        //     { name: '电饭煲', img: '9.jpg' }
-        //   ]
-        // }
-        // }
-      ],
+      categoryList: [],
       searchWord: ''
     }
   },
@@ -122,10 +108,14 @@ export default {
         this.city = data[0].regeocodeData.addressComponent.city.replace(/市/g, '');//把"市"去掉
       }
     })
+
     // 加载分类菜单
     this.getPtypeDtoMiniProgramMenu()
+
   },
   onShow () {
+    // 检查用户情况
+    this.checkUserInfStatus()
   },
   methods: {
     //消息列表
@@ -158,11 +148,17 @@ export default {
         // console.log(resp)
         // id: 1, title: '家用电器', banner: '/static/img/category/banner.jpg', list: [
         //     { name: '冰箱', img: '1.jpg' },
-
       })
     },
     getMinioImgUrl (sysAnnex) {
       return SystemApi.getMinioImg(sysAnnex.storagePath + sysAnnex.newAnnexName)
+    },
+    checkUserInfStatus () {
+      if (ENUM_STATUS.NOT_OBTAINED.code === Util.getCurrentUserInf().status.trim()) {
+        this.$refs['accountLoginModal'].openModal(true)
+        return false
+      }
+      return true
     }
   },
   components: { AccountLoginModal }

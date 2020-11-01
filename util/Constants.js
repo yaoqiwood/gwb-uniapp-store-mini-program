@@ -11,6 +11,10 @@ const ENUM_STATUS = {
 		name: '未获取到信息',
 		code: '2'
 	},
+	NOT_PHONE_NUM: {
+		name: '未获取到手机信息',
+		code: '3'
+	},
 	DELETED: {
 		name: '删除',
 		code: '99'

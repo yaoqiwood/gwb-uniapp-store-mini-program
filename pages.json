@@ -193,15 +193,15 @@
     //     }
     //   }
     // },
-    // {
-    //   "path": "pages/msg/msg",
-    //   "style": {
-    //     "enablePullDownRefresh": true,
-    //     "navigationBarTitleText": "消息列表",
-    //     "navigationBarBackgroundColor": "#FF3E3E",
-    //     "navigationBarTextStyle": "white"
-    //   }
-    // },
+    {
+      "path": "pages/msg/msg",
+      "style": {
+        "enablePullDownRefresh": true,
+        "navigationBarTitleText": "消息列表",
+        "navigationBarBackgroundColor": "#FF3E3E",
+        "navigationBarTextStyle": "white"
+      }
+    },
     {
       "path": "pages/msg/chat/chat",
       "style": {

@@ -24,13 +24,13 @@
       </view>
       <!-- 右侧图标按钮 -->
       <view class="icon-btn">
-        <view class="icon">
+        <view class="icon"
+              @tap="toMsg">
           <!--					<contact-button></contact-button>-->
           <image open-type="contact"
                  src="/static/img/gwb-img/customer_service.png"></image>
         </view>
-        <view class="icon tongzhi"
-              @tap="toMsg"></view>
+        <!-- <view class="icon tongzhi"></view> -->
       </view>
     </view>
     <!-- 占位 -->
@@ -109,8 +109,10 @@
         <!--		大标题		-->
         <view class="hot_goods">
           <image src="/static/img/gwb-img/shouye_rmsp.png"></image>
-        </view
-        <!--		内容		-->
+        </view>
+        <!--
+               内容
+               -->
         <view class="hot_goods_frame">
           <view class="hot_items"
                 v-for="item in hotItemArray"
@@ -157,7 +159,7 @@
         <view class="loading-text">{{ loadingText }}</view>
       </view>
     </view>
-    <account-login-modal />
+    <account-login-modal ref="accountLoginModal" />
   </view>
 </template>
 
@@ -168,6 +170,7 @@ import amap from '@/common/SDK/amap-wx.js'
 import Util from '@/util/Util'
 import HomeApi from '@/api/home/Home'
 import SystemApi from '@/api/system/System'
+import { ENUM_STATUS } from '@/util/Constants'
 import AccountLoginModal from '@/pages/widgets/AccountLoginModal'
 
 export default {
@@ -185,6 +188,7 @@ export default {
       stocksSiftCount: 0,
       currentStep: 0,
       stepSize: 8,
+      searchWord: '',
       // 轮播图片
       swiperList: [
         // {id: 1, src: 'url1', img: '/static/img/gwb-img/gwb_logo_swiper.jpg'}
@@ -264,7 +268,7 @@ export default {
         // 	oldPrice: 120
         // }
       ]
-    };
+    }
   },
   onPageScroll (e) {
     //兼容iOS端下拉时顶部漂移
@@ -330,7 +334,8 @@ export default {
     this.getGoodStocksSaleTopThree()
     // 加载商品列表
     this.getCountAndStocksList()
-
+    // 加载用户信息
+    this.reNewUserInf()
   },
   methods: {
     //加载Promotion 并设定倒计时,,实际应用中应该是ajax加载此数据。
@@ -429,13 +434,13 @@ export default {
       })
     },
     //搜索跳转
-    toSearch () {
-      let pfullname = this.searchWord
-      uni.navigateTo({
-        url: '../../goods/goods-list/goods-list?pfullname=' + pfullname
-      })
-      // uni.showToast({ title: '建议跳转到新页面做搜索功能' });
-    },
+    // toSearch () {
+    //   let pfullname = this.searchWord
+    //   uni.navigateTo({
+    //     url: '../../goods/goods-list/goods-list?pfullname=' + pfullname
+    //   })
+    //   // uni.showToast({ title: '建议跳转到新页面做搜索功能' });
+    // },
     //轮播图跳转
     toSwiper (e) {
       uni.showToast({ title: e.src, icon: 'none' });
@@ -446,7 +451,7 @@ export default {
       uni.setStorageSync('catName', e.name);
       uni.navigateTo({
         url: '../../goods/goods-list/goods-list?cid=' + e.id + '&name=' + e.name
-      });
+      })
     },
     //推荐商品跳转
     toPromotion (e) {
@@ -454,13 +459,19 @@ export default {
     },
     //商品跳转
     toGoods (e) {
-      // uni.showToast({ title: '商品' + e.goods_id, icon: 'none' });
-      // uni.navigateTo({
-      //   url: '../../goods/goods?ptypeId=' + e.goodsId
-      // })
+      // console.log(Util.getCurrentUserInf())
+      // if (ENUM_STATUS.NOT_OBTAINED.code === Util.getCurrentUserInf().status.trim()) {
+      //   this.$refs['accountLoginModal'].openModal()
+      //   return
+      // }
       this.toGoodsNav(e.goodsId)
     },
     toGoodsNav (id) {
+      // console.log(Util.getCurrentUserInf())
+      if (ENUM_STATUS.NOT_OBTAINED.code === Util.getCurrentUserInf().status.trim()) {
+        this.$refs['accountLoginModal'].openModal()
+        return
+      }
       uni.navigateTo({
         url: '../../goods/goods?ptypeId=' + id
       })
@@ -608,6 +619,11 @@ export default {
         url: '../../goods/goods-list/goods-list?pfullname=' + pfullname
       })
       // uni.showToast({ title: "建议跳转到新页面做搜索功能" });
+    },
+    reNewUserInf () {
+      SystemApi.getWxUserInf().then(resp => {
+        Util.setCurrentUserInf(resp)
+      })
     }
   },
   computed: {

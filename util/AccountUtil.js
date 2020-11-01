@@ -1,10 +1,10 @@
 import SystemApi from '@/api/system/System'
 import Util from '@/util/Util'
-import {ENUM_STATUS} from "./Constants"
+import { ENUM_STATUS } from "./Constants"
 
 
 const util = {
-	login() {
+	login () {
 		return new Promise((resolve, reject) => {
 			uni.login({
 				provider: 'weixin',

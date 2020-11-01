@@ -90,6 +90,7 @@
 </template>
 <script>
 import OrderListApi from '@/api/orderList/OrderList'
+import OrderMainApi from '@/api/order/main/OrderMain'
 import { ENUM_ORDER_STAUTS } from '@/util/Constants'
 import Util from '@/util/Util'
 export default {
@@ -164,7 +165,17 @@ export default {
         success: (res) => {
           if (res.confirm) {
             // console.log('用户点击确定');
-            this.doCancelOrder(row.ordersn);
+            // console.log(row)
+            OrderMainApi.cancelOrder(row.orderNo).then(resp => {
+              this.pageStep = 0
+              this.showType(this.tabbarIndex)
+              uni.showToast({
+                title: '取消订单成功',
+                icon: 'success',
+                duration: 2000
+              })
+            })
+            // this.doCancelOrder(row.ordersn);
           } else if (res.cancel) {
             // console.log('用户点击取消');
           }

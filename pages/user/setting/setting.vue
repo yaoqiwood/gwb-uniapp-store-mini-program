@@ -84,7 +84,7 @@ export default {
     showAboutApp () {
       uni.showModal({
         title: '关于',
-        content: '本小程序商城由 柴甜橘 提供技术支持',
+        content: '本小程序商城由 柴柴Bruce 提供技术支持',
         showCancel: false
       })
     }
