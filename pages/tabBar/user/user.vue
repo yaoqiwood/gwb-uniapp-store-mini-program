@@ -285,11 +285,16 @@ export default {
     },
     getSessionUserInf () {
       let obj = null
+      uni.showLoading({
+        title: '加载信息中'
+      })
       if (Util.getCurrentUserInf()) {
         obj = Util.getCurrentUserInf()
         this.userObj(obj)
+        uni.hideLoading()
       } else {
         SystemApi.getWxUserInf().then(resp => {
+          uni.hideLoading()
           obj = resp
           Util.setCurrentUserInf(obj)
           this.userObj(obj)

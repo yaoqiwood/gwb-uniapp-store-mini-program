@@ -67,7 +67,8 @@
               <view class="default"
                     @tap="showLogistics(row)">查看物流</view>
               <view class="pay">确认收货</view>
-              <view class="pay">我要退货</view>
+              <view class="pay"
+                    @tap="refundOrReturnGoods(row)">我要退/换货</view>
             </block>
             <block v-if="checkSuccessEnum(row.status)">
               <!-- <view class="default">评价</view> -->
@@ -255,6 +256,12 @@ export default {
     },
     checkCanceledEnum (code) {
       return ENUM_ORDER_STAUTS.CLOSED.code === parseInt(code)
+    },
+    refundOrReturnGoods (row) {
+      Util.setSession("chooseMallOrderList", row.mallOrderItemList)
+      uni.navigateTo({
+        url: '../../order/RefundOrReturnApplyPage?momId=' + row.momId
+      })
     }
 
   }

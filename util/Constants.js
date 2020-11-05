@@ -155,5 +155,57 @@ const ENUM_SHIPPING_METHOD = {
 	}
 }
 
+const ENUM_RE_TYPE = {
+	NORMAL: {
+		name: '正常',
+		code: 10
+	},
+	REQ_RETURN: {
+		name: '申请退货',
+		code: 20
+	},
+	RETURN: {
+		name: '退货',
+		code: 25
+	},
+	REQ_EXCHANG: {
+		name: '换货申请',
+		code: 30
+	},
+	EXCHANGE: {
+		name: '换货',
+		code: 35
+	},
+	TEMPORALLY_NOT_SHIPPED: {
+		name: '暂不发货',
+		code: 40
+	},
+	// REFUND: {
+	// 	name: '退货',
+	// 	code: 'refund'
+	// },
+	// CHANGE: {
+	// 	name: '换货',
+	// 	code: 'exchange'
+	// },
+	getName (code) {
+		for (let i in this) {
+			if (this[i].code === code) {
+				return this[i].name
+			}
+		}
+		return ''
+	}
+}
 
-export { ENUM_STATUS, ENUM_GOODS_COLUMN, ENUM_ORDER, ENUM_TASK_BAR, ENUM_ORDER_STAUTS, ENUM_CONFIRM_TYPE, ENUM_SHIPPING_METHOD }
+
+export {
+	ENUM_STATUS,
+	ENUM_GOODS_COLUMN,
+	ENUM_ORDER,
+	ENUM_TASK_BAR,
+	ENUM_ORDER_STAUTS,
+	ENUM_CONFIRM_TYPE,
+	ENUM_SHIPPING_METHOD,
+	ENUM_RE_TYPE
+}

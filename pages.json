@@ -1,4 +1,7 @@
 {
+  "easycom": {
+    "^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
+  },
   "pages": [
     //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
     {
@@ -297,6 +300,24 @@
       "path":"pages/express/ExpressPage",
       "style": {
         "navigationBarTitleText": "物流查看",
+        "navigationBarBackgroundColor": "#f8f8f8",
+        "backgroundColorTop": "#f3f3f3",
+        "backgroundColorBottom": "#ffffff"
+      }
+    },
+    {
+      "path":"pages/order/RefundOrReturnPage",
+      "style": {
+        "navigationBarTitleText": "退/换货信息填写",
+        "navigationBarBackgroundColor": "#f8f8f8",
+        "backgroundColorTop": "#f3f3f3",
+        "backgroundColorBottom": "#ffffff"
+      }
+    },
+    {
+      "path":"pages/order/RefundOrReturnApplyPage",
+      "style": {
+        "navigationBarTitleText": "退/换货申请",
         "navigationBarBackgroundColor": "#f8f8f8",
         "backgroundColorTop": "#f3f3f3",
         "backgroundColorBottom": "#ffffff"
