@@ -106,7 +106,7 @@ export default {
             this.queryByItemNum(this.payOrderInf[0].id).then(resp => {
               let desTime = new Date(resp.createTime)
               // desTime = desTime.getTime() + 3600 * 1000
-              desTime = desTime.getTime() + 1800 * 1000
+              desTime = desTime.getTime() + 3600 * 1000
               // console.log(desTime)
               // desTime = moment(desTime).format('YYYY-MM-DD HH:mm:ss')
               this.clock(desTime)

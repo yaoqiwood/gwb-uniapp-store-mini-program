@@ -303,6 +303,10 @@ export default {
           shippingType: this.expressArray[this.expressIndex].code,
           shippingName: this.expressArray[this.expressIndex].name
         }
+        // 姓名地址电话填入
+        params.address = this.recinfo.provinceName + this.recinfo.cityName + this.recinfo.detailInfo
+        params.phoneNum = this.recinfo.telNumber
+        params.userName = this.recinfo.userName
         OrderApi.confirmOrder(params).then(resp => {
           resolve(resp)
         })

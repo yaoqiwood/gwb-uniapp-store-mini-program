@@ -118,6 +118,8 @@ export default {
     };
   },
   onLoad (option) {
+    // 处理枚举修改为特殊值
+    ENUM_ORDER_STAUTS.RETURN.code = 120
     //option为object类型，会序列化上个页面传递的参数
     let tbIndex = parseInt(option.tbIndex);
     // this.list = this.orderList[tbIndex];
@@ -252,7 +254,10 @@ export default {
       return ENUM_ORDER_STAUTS.SUCCESS.code === parseInt(code)
     },
     checkReturnEnum (code) {
-      return ENUM_ORDER_STAUTS.RETURN.code === parseInt(code)
+      // 魔法值代替
+      return (30 === parseInt(code) ||
+        ENUM_ORDER_STAUTS.AGREE_TO_REFUND.code === parseInt(code) ||
+        ENUM_ORDER_STAUTS.RETURNED.code === parseInt(code))
     },
     checkCanceledEnum (code) {
       return ENUM_ORDER_STAUTS.CLOSED.code === parseInt(code)
