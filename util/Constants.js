@@ -75,6 +75,16 @@ const ENUM_ORDER_STAUTS = {
 		code: 30,
 		index: 4
 	},
+	AGREE_TO_REFUND: {
+		name: '同意售后',
+		code: 32,
+		index: null
+	},
+	RETURNED: {
+		name: '售后完成',
+		code: 80,
+		index: null
+	},
 	SHIPPED: {
 		name: '已发货',
 		code: 40,
