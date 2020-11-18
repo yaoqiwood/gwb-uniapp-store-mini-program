@@ -322,6 +322,15 @@
         "backgroundColorTop": "#f3f3f3",
         "backgroundColorBottom": "#ffffff"
       }
+    },
+    {
+      "path":"pages/afterSaleReview/AfterSaleReview",
+      "style": {
+        "navigationBarTitleText": "售后进度",
+        "navigationBarBackgroundColor": "#f8f8f8",
+        "backgroundColorTop": "#f3f3f3",
+        "backgroundColorBottom": "#ffffff"
+      }
     }
   ],
   "globalStyle": {

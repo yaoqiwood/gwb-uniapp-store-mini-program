@@ -24,7 +24,11 @@ const defaultMethod = {
 	},
 	decodePhoneNum (encrypdata, ivdata, code) {
 		return Util.get('/wx/wxUser/decodePhoneNum', { encrypdata: encrypdata, ivdata: ivdata, code: code })
-	}
+	},
+	getRetAddressInf () {
+		return Util.get('/wx/wxConfInf/getRetAddressInf')
+	},
+	minioUploadAction: config.getFullBaseUrl() + '/file/minio/upload'
 }
 
 export default defaultMethod

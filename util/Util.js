@@ -50,6 +50,18 @@ const util = {
 	getMallOrderMainSession () {
 		return this.getSession("mallOrderMain")
 	},
+	setSelectMallOrderMainSession (params) {
+		this.setSession("selectMallOrderMainSession", params)
+	},
+	getSelectMallOrderMainSession () {
+		return this.getSession("selectMallOrderMainSession")
+	},
+	setRetAddressInf (params) {
+		this.setSession("retAddressInfSession", params)
+	},
+	getRetAddressInf () {
+		return this.getSession("retAddressInfSession")
+	},
 	// 设定默认地址选定
 	setDefaultAddress (address) {
 		this.setSession("defaultAddress", JSON.stringify(address))
@@ -66,6 +78,22 @@ const util = {
 	},
 	setSession (key, value) {
 		uni.setStorageSync(key, value);
+	},
+	formatDate (date, fmt) {
+		var o = {
+			"M+": date.getMonth() + 1, //月份 
+			"d+": date.getDate(), //日 
+			"h+": date.getHours(), //小时 
+			"m+": date.getMinutes(), //分 
+			"s+": date.getSeconds() //秒 
+		}
+		if (/(y+)/.test(fmt)) { //根据y的长度来截取年
+			fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length))
+		}
+		for (var k in o) {
+			if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)))
+		}
+		return fmt
 	},
 	headerTimesTamp () {
 		return Math.floor(new Date().getTime() / 1000)

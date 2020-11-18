@@ -78,7 +78,8 @@
               <view class="default">再次购买</view>
             </block> -->
             <block v-if="checkReturnEnum(row.status)">
-              <view class="default">查看进度</view>
+              <view class="default"
+                    @tap="reviewAfterSale(row)">查看售后进度</view>
             </block>
             <block v-if="checkCanceledEnum(row.status)">
               <view class="default">已关闭</view>
@@ -119,7 +120,7 @@ export default {
   },
   onLoad (option) {
     // 处理枚举修改为特殊值
-    ENUM_ORDER_STAUTS.RETURN.code = 120
+    // ENUM_ORDER_STAUTS.RETURN.code = 120
     //option为object类型，会序列化上个页面传递的参数
     let tbIndex = parseInt(option.tbIndex);
     // this.list = this.orderList[tbIndex];
@@ -267,8 +268,13 @@ export default {
       uni.navigateTo({
         url: '../../order/RefundOrReturnApplyPage?momId=' + row.momId
       })
+    },
+    reviewAfterSale (row) {
+      Util.setSelectMallOrderMainSession(row)
+      uni.navigateTo({
+        url: '../../afterSaleReview/AfterSaleReview'
+      })
     }
-
   }
 }
 </script>

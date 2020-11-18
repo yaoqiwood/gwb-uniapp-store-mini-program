@@ -25,6 +25,11 @@
         <!-- <lee-logistics :no="item.expressInf.expressId" /> -->
       </view>
     </view>
+    <view style="text-align:center">
+      <text v-if="expressPackagesInf.length === 0">
+        当前暂无物流信息
+      </text>
+    </view>
   </view>
 </template>
 
@@ -46,7 +51,6 @@ export default {
     }
   },
   onLoad (row) {
-    // console.log(row.orderNo)
     this.orderItemList(row.orderNo)
   },
   methods: {

@@ -73,12 +73,25 @@ const ENUM_ORDER_STAUTS = {
 	RETURN: {
 		name: '退款/换货',
 		code: 30,
+		index: null
+	},
+	RETURN_4_SEARCH: {
+		name: '售后申请搜索',
+		code: 120,
 		index: 4
 	},
 	AGREE_TO_REFUND: {
 		name: '同意售后',
 		code: 32,
 		index: null
+	},
+	RETURN_CONFIRM: {
+		name: '确认售后',
+		code: 70
+	},
+	WAIT_RETURN: {
+		name: '等待退回',
+		code: 72
 	},
 	RETURNED: {
 		name: '售后完成',

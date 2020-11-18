@@ -433,14 +433,6 @@ export default {
         url: '../../msg/msg'
       })
     },
-    //搜索跳转
-    // toSearch () {
-    //   let pfullname = this.searchWord
-    //   uni.navigateTo({
-    //     url: '../../goods/goods-list/goods-list?pfullname=' + pfullname
-    //   })
-    //   // uni.showToast({ title: '建议跳转到新页面做搜索功能' });
-    // },
     //轮播图跳转
     toSwiper (e) {
       uni.showToast({ title: e.src, icon: 'none' });
@@ -537,67 +529,21 @@ export default {
       })
     },
     login () {
-      // uni.login({
-      // 	provider: 'weixin',
-      // 	success: (loginRes) => {
-      // 		SystemApi.wxUserLogin2Server(loginRes.code).then(resp => {
-      // 			Util.setToken(resp.token)
-      // 			uni.getUserInfo({
-      // 				provider: 'weixin',
-      // 				success: (infoRes) => {
-      // 					SystemApi.wxUserInfUpdate({
-      // 						uid: resp.uid,
-      // 						avatarUrl: infoRes.userInfo.avatarUrl,
-      // 						city: infoRes.userInfo.city,
-      // 						country: infoRes.userInfo.country,
-      // 						gender: infoRes.userInfo.gender,
-      // 						nickName: infoRes.userInfo.nickName,
-      // 						province: infoRes.userInfo.province
-      // 					})
-      // 				}
-      // 			})
-      // 		})
-      // 	}
-      // })
     },
     checkSession () {
-      // uni.checkSession({
-      // 	success: (res) => {
-      // 		// console.log(res)
-      // 	},
-      // 	fail: (res) => {
-      // 		console.log(res)
-      // 	}
-      // })
     },
     getCountAndStocksList () {
-      // HomeApi.getGoodStockSiftCount().then(resp => {
-      //   this.stocksSiftCount = resp
-
-      // })
       HomeApi.selectPTypePriceByPage().then(resp => {
         this.stocksSiftCount = resp.total
         this.currentStep = 1
         this.respFillProductList(resp)
-        // {
-        // 	goods_id: 0,
-        // 	img: '/static/img/goods/p1.jpg',
-        // 	name: '商品名称商品名称商品名称商品名称商品名称',
-        // 	price: '168',
-        // 	slogan: '1235人付款'
-        // },
-        // {
       })
     },
     getGoodStockSiftCount () {
-      HomeApi.getGoodStockSiftCount().then(resp => {
-
-      })
+      HomeApi.getGoodStockSiftCount().then(resp => { })
     },
     selectPTypePriceByPage () {
-      HomeApi.selectPTypePriceByPage().then(resp => {
-
-      })
+      HomeApi.selectPTypePriceByPage().then(resp => { })
     },
     respFillProductList (resp) {
       for (const argument of resp.records) {
@@ -621,8 +567,17 @@ export default {
       // uni.showToast({ title: "建议跳转到新页面做搜索功能" });
     },
     reNewUserInf () {
+      uni.showLoading({ title: "加载中..." })
       SystemApi.getWxUserInf().then(resp => {
         Util.setCurrentUserInf(resp)
+        // 加载退货地址
+        this.getRetAddressInf()
+      })
+    },
+    getRetAddressInf () {
+      SystemApi.getRetAddressInf().then(resp => {
+        Util.setRetAddressInf(resp)
+        uni.hideLoading()
       })
     }
   },
