@@ -210,7 +210,7 @@ export default {
               uni.hideLoading()
               setTimeout(() => {
                 uni.reLaunch({
-                  url: '../tabBar/user/user'
+                  url: '../user/order_list/order_list'
                 })
               }, 2000)
             })

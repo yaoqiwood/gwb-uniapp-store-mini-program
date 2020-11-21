@@ -115,7 +115,9 @@ export default {
       list: [],
       tabbarIndex: 0,
       pageStep: 1,
-      pageSize: 10
+      pageSize: 10,
+      totalPage: 10,
+      currentCode: ''
     };
   },
   onLoad (option) {
@@ -142,11 +144,24 @@ export default {
     //兼容iOS端下拉时顶部漂移
     this.headerPosition = e.scrollTop >= 0 ? "fixed" : "absolute";
   },
+  onReachBottom () {
+    if (this.totalPage <= this.pageStep) {
+      return
+    }
+    this.pageStep += 1
+    OrderListApi.getMallOrderMainDto(this.pageStep, this.pageSize, this.currentCode).then(resp => {
+      resp.records.forEach(element => {
+        this.list.push(element)
+      })
+    })
+  },
   methods: {
     showType (tbIndex) {
       this.tabbarIndex = tbIndex;
       for (let i in ENUM_ORDER_STAUTS) {
         if (ENUM_ORDER_STAUTS[i].index === tbIndex) {
+          this.pageStep = 1
+          this.currentCode = ENUM_ORDER_STAUTS[i].code
           this.loadData(this.pageStep, this.pageSize, ENUM_ORDER_STAUTS[i].code)
         }
       }
@@ -224,6 +239,7 @@ export default {
       for (let index in ENUM_ORDER_STAUTS) {
         if (ENUM_ORDER_STAUTS[index].index === this.tabbarIndex) {
           type = ENUM_ORDER_STAUTS[index].code
+          this.currentCode = type
         }
       }
       uni.showLoading({
@@ -235,6 +251,7 @@ export default {
       OrderListApi.getMallOrderMainDto(pageStep, pageSize, status).then(resp => {
         if (resp.records.length > 0) {
           this.list = resp.records
+          this.totalPage = resp.pages
         } else {
           this.list = []
         }
