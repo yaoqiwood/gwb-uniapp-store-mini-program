@@ -275,7 +275,8 @@ export default {
       // 魔法值代替
       return (30 === parseInt(code) ||
         ENUM_ORDER_STAUTS.AGREE_TO_REFUND.code === parseInt(code) ||
-        ENUM_ORDER_STAUTS.RETURNED.code === parseInt(code))
+        ENUM_ORDER_STAUTS.RETURNED.code === parseInt(code)) ||
+        ENUM_ORDER_STAUTS.WAIT_RETURN.code === parseInt(code)
     },
     checkCanceledEnum (code) {
       return ENUM_ORDER_STAUTS.CLOSED.code === parseInt(code)

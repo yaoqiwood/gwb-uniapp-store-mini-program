@@ -114,6 +114,13 @@
                 range-key="name"
                 @confirm="shippingConfirm" />
     </view>
+    <view class="order"
+          v-if="hasUserReturnInfRignt()">
+      <view class="row">
+        您已提交退回物流信息,请等待商家审核......
+      </view>
+    </view>
+
     <u-modal v-model="showConfirmModal"
              :content="content"
              :show-cancel-button="true"
@@ -126,6 +133,7 @@ import Util from '@/util/Util'
 import { ENUM_ORDER_STAUTS, ENUM_SHIPPING_METHOD } from '@/util/Constants'
 import SystemApi from '@/api/system/System'
 import AfterSaleReviewApi from '@/api/afterSaleReview/AfterSaleReview'
+import OrderMainApi from '@/api/order/main/OrderMain'
 export default {
   data: () => {
     return {
@@ -161,6 +169,8 @@ export default {
     this.initAllData()
     this.getOrderInf()
     this.getRetAddressInf()
+    // 后续有需求再把信息填入
+    // this.getUserReturnInf()
   },
   methods: {
     initAllData () {
@@ -259,7 +269,7 @@ export default {
         })
         setTimeout(() => {
           uni.navigateTo({
-            url: '../user/order_list/order_list'
+            url: '../user/order_list/order_list?tbIndex=0'
           })
         }, 2000)
       })
@@ -287,6 +297,24 @@ export default {
         return
       }
       this.showConfirmModal = true
+    },
+    hasUserReturnInfRignt () {
+      return this.orderInf.status == ENUM_ORDER_STAUTS.WAIT_RETURN.code
+    },
+    getUserReturnInf () {
+      if (this.orderInf.status == ENUM_ORDER_STAUTS.WAIT_RETURN.code) {
+        this.getMallOrderReturnInfById(this.orderInf.momId)
+      }
+    },
+    getMallOrderReturnInfById (momId) {
+      OrderMainApi.getMallOrderReturnInfById(momId).then(resp => {
+
+      })
+    },
+    repealOrderReturnReq (orderNum) {
+      return OrderMainApi.repealOrderReturnReq(orderNum).then(resp => {
+
+      })
     }
   }
 }

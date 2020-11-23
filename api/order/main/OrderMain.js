@@ -9,5 +9,11 @@ export default {
   },
   cancelOrder (orderNum) {
     return Util.put("/gwb/mallOrderMain/cancelOrder?orderNum=" + orderNum)
+  },
+  repealOrderReturnReq (orderNum) {
+    return Util.put("/gwb/mallOrderMain/repealOrderReturnReq?orderNum=" + orderNum)
+  },
+  getMallOrderReturnInfById (momId) {
+    return Util.get("/gwb/mallOrderMain/getMallOrderReturnInfById?momId=" + momId)
   }
 }
