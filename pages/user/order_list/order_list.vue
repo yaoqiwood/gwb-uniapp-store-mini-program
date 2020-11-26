@@ -28,6 +28,7 @@
           <view class="type">{{typeText[row.type]}}</view>
           <view class="order-info"
                 v-for="(rowSecond,rowIndex) in row.mallOrderItemList"
+                @tap="toDetailPage(row)"
                 :key="rowIndex">
             <view class="left">
               <!-- <image :src="row.img"></image> -->
@@ -66,13 +67,15 @@
             <block v-if="checkShippedEnum(row.status)">
               <view class="default"
                     @tap="showLogistics(row)">查看物流</view>
-              <view class="pay">确认收货</view>
+              <view class="pay"
+                    @tap="confirmReceiveGoods(row)">确认收货</view>
               <view class="pay"
                     @tap="refundOrReturnGoods(row)">我要退/换货</view>
             </block>
             <block v-if="checkSuccessEnum(row.status)">
               <!-- <view class="default">评价</view> -->
-              <view class="default">再次购买</view>
+              <view class="default"
+                    @tap="rebuyTheList(row.mallOrderItemList)">再次购买</view>
             </block>
             <!-- <block v-if="row.type=='completed'">
               <view class="default">再次购买</view>
@@ -291,6 +294,82 @@ export default {
       Util.setSelectMallOrderMainSession(row)
       uni.navigateTo({
         url: '../../afterSaleReview/AfterSaleReview'
+      })
+    },
+    confirmReceiveGoods (row) {
+      uni.showModal({
+        title: '确认收货',
+        content: '是否要进行确认收货',
+        success: (res) => {
+          if (res.confirm) {
+            OrderMainApi.confirmReceiveGoods(row.orderNo).then(resp => {
+              if (resp) {
+                uni.showToast({
+                  title: '确认收货成功',
+                  icon: 'success',
+                  duration: 2000
+                })
+                this.pageStep = 1
+                uni.showLoading({
+                  title: '正在获取订单...'
+                })
+                this.loadData(this.pageStep, this.pageSize, this.currentCode)
+              }
+            })
+          }
+        }
+      })
+    },
+    // 再次购买
+    rebuyTheList (list) {
+      let tempList = list.map(item => {
+        return { id: item.ptypeId, imgUrl: item.ptypeCover, name: item.ptypePfullname, price: item.price, number: 1 }
+      })
+      let sw = true
+      let repeatJSON = Util.getShoppingCartInf()
+      // 检测是否超过
+      if (repeatJSON.length >= 100) {
+        uni.showToast({
+          title: "购物不可以种类超过100",
+          icon: "none"
+        })
+        return
+      }
+      for (let i = repeatJSON.length; i >= 0; i--) {
+        if (repeatJSON[i] === null) {
+          repeatJSON.splice(i)
+        }
+      }
+      // console.log(repeatJSON)
+      repeatJSON.forEach(element => {
+        // 1
+        if (element === null) {
+          repeatJSON.splice(repeatJSON.indexOf(null))
+        }
+      })
+      // console.log(repeatJSON)
+      tempList.forEach(listElement => {
+        sw = true
+        repeatJSON.forEach(element => {
+          if (element.id == listElement.id) {
+            element.number += listElement.number
+            sw = false
+          }
+        })
+        if (sw) {
+          repeatJSON.push(listElement)
+        }
+      })
+
+      Util.setShopingCartInf(repeatJSON)
+      uni.showToast({
+        title: '添加购物车成功',
+        duration: 1000
+      })
+    },
+    toDetailPage (row) {
+      uni.navigateTo({
+        url: '../../order/StatusPage?momId=' + row.momId
       })
     }
   }

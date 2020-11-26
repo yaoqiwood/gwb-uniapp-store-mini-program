@@ -116,8 +116,16 @@
     </view>
     <view class="order"
           v-if="hasUserReturnInfRignt()">
-      <view class="row">
+      <view class="row"
+            style="height:auto;font-size:14px">
         您已提交退回物流信息,请等待商家审核......
+      </view>
+    </view>
+    <view class="order"
+          v-if="hasReturnedChangeInfRight()">
+      <view class="row"
+            style="height:auto;font-size:14px">
+        售后将在七个工作日处理完毕,请注意查收.
       </view>
     </view>
 
@@ -300,6 +308,9 @@ export default {
     },
     hasUserReturnInfRignt () {
       return this.orderInf.status == ENUM_ORDER_STAUTS.WAIT_RETURN.code
+    },
+    hasReturnedChangeInfRight () {
+      return this.orderInf.status == ENUM_ORDER_STAUTS.RETURNED.code
     },
     getUserReturnInf () {
       if (this.orderInf.status == ENUM_ORDER_STAUTS.WAIT_RETURN.code) {

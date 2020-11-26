@@ -15,5 +15,11 @@ export default {
   },
   getMallOrderReturnInfById (momId) {
     return Util.get("/gwb/mallOrderMain/getMallOrderReturnInfById?momId=" + momId)
+  },
+  confirmReceiveGoods (orderNo) {
+    return Util.put("/gwb/mallOrderMain/confirmReceiveGoods?orderNo=" + orderNo)
+  },
+  getMallOrderMainDetailById (momId) {
+    return Util.get("/gwb/mallOrderMain/getMallOrderMainDetailById?id=" + momId)
   }
 }

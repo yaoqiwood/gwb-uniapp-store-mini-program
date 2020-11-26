@@ -120,7 +120,7 @@ const ENUM_ORDER_STAUTS = {
 	},
 	getName (code) {
 		for (let i in this) {
-			if (this[i].code === code) {
+			if (this[i].code == code) {
 				return this[i].name
 			}
 		}

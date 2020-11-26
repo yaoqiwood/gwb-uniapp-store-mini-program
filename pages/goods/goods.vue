@@ -540,6 +540,7 @@ export default {
         })
         return
       }
+      // console.log(repeatJSON)
       repeatJSON.forEach(element => {
         if (element.id == this.goodsData.id) {
           element.number += this.goodsData.number
