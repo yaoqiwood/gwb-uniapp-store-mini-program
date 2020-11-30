@@ -21,5 +21,8 @@ export default {
   },
   getMallOrderMainDetailById (momId) {
     return Util.get("/gwb/mallOrderMain/getMallOrderMainDetailById?id=" + momId)
+  },
+  repealMallOrderReturnReq (orderNo) {
+    return Util.put("/gwb/mallOrderMain/repealMallOrderReturnReq?orderNo=" + orderNo)
   }
 }

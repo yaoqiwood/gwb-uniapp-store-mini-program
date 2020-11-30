@@ -80,6 +80,10 @@
             <!-- <block v-if="row.type=='completed'">
               <view class="default">再次购买</view>
             </block> -->
+            <block v-if="checkReturnReqEnum(row.status)">
+              <view class="default"
+                    @tap="repealMallOrderReturnReq(row)">撤销退货申请</view>
+            </block>
             <block v-if="checkReturnEnum(row.status)">
               <view class="default"
                     @tap="reviewAfterSale(row)">查看售后进度</view>
@@ -281,6 +285,11 @@ export default {
         ENUM_ORDER_STAUTS.RETURNED.code === parseInt(code)) ||
         ENUM_ORDER_STAUTS.WAIT_RETURN.code === parseInt(code)
     },
+    checkReturnReqEnum (code) {
+      return (30 === parseInt(code) ||
+        ENUM_ORDER_STAUTS.AGREE_TO_REFUND.code === parseInt(code) ||
+        ENUM_ORDER_STAUTS.WAIT_RETURN.code === parseInt(code))
+    },
     checkCanceledEnum (code) {
       return ENUM_ORDER_STAUTS.CLOSED.code === parseInt(code)
     },
@@ -370,6 +379,35 @@ export default {
     toDetailPage (row) {
       uni.navigateTo({
         url: '../../order/StatusPage?momId=' + row.momId
+      })
+    },
+    repealMallOrderReturnReq (row) {
+      let that = this
+      uni.showModal({
+        title: '提示',
+        content: '确定撤销售后申请？',
+        success: (res) => {
+          if (res.confirm) {
+            OrderMainApi.repealMallOrderReturnReq(row.orderNo).then(resp => {
+              if (resp) {
+                uni.showToast({
+                  title: '撤销售后成功',
+                  icon: 'success',
+                  duration: 2000
+                })
+                setTimeout(() => {
+                  that.loadData(this.pageStep, this.pageSize, this.currentCode)
+                }, 2000);
+              } else {
+                uni.showToast({
+                  title: '撤销售后失败',
+                  icon: 'error',
+                  duration: 2000
+                })
+              }
+            })
+          }
+        }
       })
     }
   }
