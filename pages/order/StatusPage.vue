@@ -1,18 +1,24 @@
 <template>
   <view>
     <view class="order">
+      <view class="row">
+        <view style="font-size:28upx">
+          订单号：{{orderData.orderNo}}
+        </view>
+      </view>
       <view class="row"
             style="height:auto">
         <view class="uni-list-cell-left left">
           订单状态:
         </view>
         <view class="uni-list-cell-db right">
-          {{getEnumOrderStauts(orderData.status) == 'getName' ? '加载中': getEnumOrderStauts(orderData.status)}}
+          {{viewStatus}}
+          <!-- {{orderData.status}} -->
         </view>
       </view>
       <view class="row"
             style="height:auto;font-size: 28upx;"
-            v-if="hasShippedStatus(orderData.status)">
+            v-if="returnBoolean">
         <view>
           确认收货倒计时:
           <u-count-down style="padding-left:20upx"
@@ -20,6 +26,55 @@
         </view>
       </view>
     </view>
+
+    <view class="order">
+      <view class="row"
+            style="font-size: 28upx;">
+        订单商品列表：
+      </view>
+      <view v-for="(item,i) in orderData.mallOrderItemList"
+            :key="item.moiId"
+            style="border-bottom:1px solid #F4F4F4">
+        <view class="row"
+              style="height:auto;justify-content:space-between"
+              @tap="toGoods(item)">
+          <image :src="item.ptypeCover"
+                 style="width:80px;height:70px" />
+          <view>
+            <text>{{item.ptypePfullname}}</text>
+            <view style="text-align:right">
+              <text>{{item.price}} 元</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="order">
+      <view class="row">
+        <view style="font-size:28upx">
+          订单详情
+        </view>
+      </view>
+      <view class="row">
+        <view class="uni-list-cell-left left">
+          创建时间：
+        </view>
+        <view class="uni-list-cell-db right">
+          {{orderData.createTime}}
+        </view>
+      </view>
+      <view class="row"
+            v-if="orderData.paymentTime">
+        <view class="uni-list-cell-left left">
+          付款时间：
+        </view>
+        <view class="uni-list-cell-db right">
+          {{orderData.paymentTime}}
+        </view>
+      </view>
+    </view>
+  </view>
   </view>
 </template>
 
@@ -32,7 +87,13 @@ export default {
   },
   data: () => {
     return {
-      orderData: {},
+      orderData: {
+        orderNo: '',
+        mallOrderItemList: [],
+        status: ''
+      },
+      viewStatus: '',
+      returnBoolean: false,
       confirmReceiveTimestamp: 0,
       enumOrderStauts: ENUM_ORDER_STAUTS
     }
@@ -45,6 +106,8 @@ export default {
       OrderMainApi.getMallOrderMainDetailById(id).then(resp => {
         this.orderData = resp
         this.confirmReceiveTimestamp
+        this.viewStatus = this.getEnumOrderStauts(resp.status) == 'getName' ? '加载中' : this.getEnumOrderStauts(resp.status)
+        this.returnBoolean = this.hasShippedStatus(resp.status)
       })
     },
     getEnumOrderStauts (status) {
@@ -58,6 +121,9 @@ export default {
     },
     hasShippedStatus (status) {
       return ENUM_ORDER_STAUTS.SHIPPED.code == status
+    },
+    toGoods (row) {
+      uni.navigateTo({ url: '../goods/goods?ptypeId=' + row.ptypeId })
     }
   }
 }

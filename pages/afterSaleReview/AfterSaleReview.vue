@@ -128,7 +128,6 @@
         售后将在七个工作日处理完毕,请注意查收.
       </view>
     </view>
-
     <u-modal v-model="showConfirmModal"
              :content="content"
              :show-cancel-button="true"

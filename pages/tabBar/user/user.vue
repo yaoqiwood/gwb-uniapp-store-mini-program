@@ -138,7 +138,8 @@ export default {
         username: '游客',
         face: '/static/img/gwb-img/default_avatar.png',
         // face: '/static/img/face.jpg',
-        signature: '点击昵称以授权登录',
+        // signature: '点击昵称以授权登录',
+        signature: '',
         integral: 0,
         balance: 0,
         envelope: 0
@@ -190,13 +191,7 @@ export default {
     // #endif
   },
   onReady () {
-    //此处，演示,每次页面初次渲染都把登录状态重置
-    if (!Util.getObtainedStatus()) {
-      // 还未授权的情况
-    } else {
-      // 检查本地是否已经存在的用户信息
-      this.getSessionUserInf()
-    }
+
     // uni.setStorage({
     //   key: 'UserInfo',
     //   data: false,
@@ -209,6 +204,15 @@ export default {
   onShow () {
     //  检查用户状态
     this.checkUserInfStatus()
+
+    //此处，演示,每次页面初次渲染都把登录状态重置
+    if (!Util.getObtainedStatus()) {
+      // 还未授权的情况
+    } else {
+      // 检查本地是否已经存在的用户信息
+      this.getSessionUserInf()
+    }
+
     // uni.getStorage({
     //   key: 'UserInfo',
     //   success: (res) => {

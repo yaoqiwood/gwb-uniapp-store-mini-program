@@ -221,6 +221,25 @@ const ENUM_RE_TYPE = {
 	}
 }
 
+const ENUM_WX_USER_ROLE_TYPE = {
+	CLIENT: {
+		name: '客户',
+		code: 'client'
+	},
+	STAFF: {
+		name: '员工',
+		code: 'staff'
+	},
+	getName (code) {
+		for (let i in this) {
+			if (this[i].code === code) {
+				return this[i].name
+			}
+		}
+		return ''
+	}
+}
+
 
 export {
 	ENUM_STATUS,
@@ -230,5 +249,6 @@ export {
 	ENUM_ORDER_STAUTS,
 	ENUM_CONFIRM_TYPE,
 	ENUM_SHIPPING_METHOD,
-	ENUM_RE_TYPE
+	ENUM_RE_TYPE,
+	ENUM_WX_USER_ROLE_TYPE
 }

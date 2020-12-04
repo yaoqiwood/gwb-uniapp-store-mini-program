@@ -262,12 +262,39 @@
     <!-- 详情 -->
     <view class="description">
       <view class="title">———— 商品详情 ————</view>
+      <!-- {{enumWxUserRoleType.STAFF.code}} -->
+      <view style="background-color:white;"
+            v-if="userInfObj.role == enumWxUserRoleType.STAFF.code">
+        <view style="display:flex; justify-content:center">
+          <u-upload ref="uUpload"
+                    :action="uploadAction"
+                    name="file"
+                    :max-size="8388608"
+                    :show-progress="true"
+                    :max-count="5"
+                    @on-list-change="onListChange"
+                    @on-uploaded="onImgSuccess"
+                    :auto-upload="false"
+                    :header="headerObj" />
+        </view>
+        <view style="display:flex;justify-content:center"
+              v-if="photoList.length > 0">
+          <u-button type="success"
+                    @click="uploadPhotos"
+                    size="medium">上传照片</u-button>
+        </view>
+      </view>
       <view class="content">
         <rich-text :nodes="descriptionStr"></rich-text>
       </view>
       <view class="holdPlace" />
     </view>
     <wx-user-phone-modal ref="wxUserPhoneModal" />
+    <u-modal v-model="showConfirmModal"
+             content="是否要进行照片上传"
+             :show-cancel-button="true"
+             @confirm="submitForm"></u-modal>
+    <u-toast ref="uToast" />
   </view>
 </template> 
 
@@ -275,9 +302,11 @@
 import WxUserPhoneModal from '@/pages/widgets/WxUserPhoneModal'
 import GoodsApi from '@/api/goods/Goods'
 import MinioApi from '@/api/system/System'
+import SystemApi from '@/api/system/System'
+import PtypeApi from '@/api/ptype/PtypeApi'
 import MallFavoritesApi from '@/api/favorites/MallFavorites'
 import Util from '@/util/Util'
-import { ENUM_CONFIRM_TYPE, ENUM_STATUS } from '@/util/Constants'
+import { ENUM_CONFIRM_TYPE, ENUM_STATUS, ENUM_WX_USER_ROLE_TYPE } from '@/util/Constants'
 export default {
   components: { WxUserPhoneModal },
   data () {
@@ -325,7 +354,13 @@ export default {
       //商品描述html
       // descriptionStr: '<div style="text-align:center;"><img width="100%" src="https://ae01.alicdn.com/kf/HTB1t0fUl_Zmx1VjSZFGq6yx2XXa5.jpg"/><img width="100%" src="https://ae01.alicdn.com/kf/HTB1LzkjThTpK1RjSZFKq6y2wXXaT.jpg"/><img width="100%" src="https://ae01.alicdn.com/kf/HTB18dkiTbvpK1RjSZPiq6zmwXXa8.jpg"/></div>'
       descriptionStr: '',
-      confirmType: ENUM_CONFIRM_TYPE.CART.code
+      confirmType: ENUM_CONFIRM_TYPE.CART.code,
+      userInfObj: Util.getCurrentUserInf(),
+      enumWxUserRoleType: ENUM_WX_USER_ROLE_TYPE,
+      uploadAction: SystemApi.minioUploadAction,
+      photoList: [],
+      headerObj: { 'X-Access-Token': Util.getToken() },
+      showConfirmModal: false
     }
   },
   onLoad (option) {
@@ -335,6 +370,7 @@ export default {
     this.ptypeId = option.ptypeId
     this.selectPtypeById(option.ptypeId)
     this.checkPhoneNum()
+    // console.log(this.ptypeId)
     // #endif
     //option为object类型，会序列化上个页面传递的参数
     // console.log(option.cid); //打印出上个页面传递的参数。
@@ -616,6 +652,53 @@ export default {
         // this.hidePop()
         return
       }
+    },
+    onListChange (lists, name) {
+      this.photoList = lists
+    },
+    onImgSuccess (lists, name) {
+      this.submitingShow = true
+      this.uploadList = lists
+      let params = {}
+      params.sysAnnexConfigInfoList = []
+      // console.log(lists)
+      lists.forEach(element => {
+        let obj = element.response.result
+        params.sysAnnexConfigInfoList.push(obj)
+      })
+
+      params.ptypeId = this.ptypeId
+
+      uni.showLoading({
+        title: '提交中...',
+        mask: true
+      })
+
+      PtypeApi.wxPtypeDetailUpdate(params).then(resp => {
+        if (!resp) {
+          this.$refs['uToast'].show({
+            title: '提交失败',
+            type: 'error'
+          })
+          uni.hideLoading()
+          return
+        }
+        this.$refs['uToast'].show({
+          title: '提交成功 2秒后跳转',
+          type: 'success'
+        })
+        setTimeout(() => {
+          uni.reLaunch({
+            url: './goods?ptypeId=' + this.ptypeId
+          })
+        }, 2000)
+      })
+    },
+    uploadPhotos () {
+      this.showConfirmModal = true
+    },
+    submitForm () {
+      this.$refs['uUpload'].upload()
     }
   }
 };
