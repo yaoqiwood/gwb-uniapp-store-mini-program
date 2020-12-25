@@ -307,6 +307,7 @@ export default {
         params.address = this.recinfo.provinceName + this.recinfo.cityName + this.recinfo.detailInfo
         params.phoneNum = this.recinfo.telNumber
         params.userName = this.recinfo.userName
+        params.userRemark = this.note
         OrderApi.confirmOrder(params).then(resp => {
           resolve(resp)
         })

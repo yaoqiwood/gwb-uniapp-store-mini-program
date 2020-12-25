@@ -207,12 +207,12 @@ export default {
         let M = H - timeLeftM * 60 * 1000 //除去天、小时、分的毫秒数
 
         let S = parseInt((timeLeft - timeLeftD * 60 * 60 * 24 * 1000 - timeLeftH * 60 * 60 * 1000 - timeLeftM * 60 * 1000) / 1000) //除去天、小时、分的毫秒数转化为秒
-        if (timeLeftM <= 0 && S <= 0) {
+        if (timeLeftM < 0 && S < 0) {
           that.leftTimeText = (0 + "分" + 0 + "秒")
           clearInterval(interval)
-          uni.reLaunch({
-            url: '../../tabBar/home/home'
-          })
+          // uni.reLaunch({
+          //   url: '../../tabBar/home/home'
+          // })
           return
         }
         // timeLeftD + "天" + timeLeftH + "小时" +

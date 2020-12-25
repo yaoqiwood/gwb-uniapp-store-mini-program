@@ -17,7 +17,7 @@
         <view class="tis"
               v-if="goodsList.length==0">没有数据~</view>
         <view class="row"
-              v-for="(row,index) in goodsList"
+              v-for="(row,index) in reverseListData"
               :key="index">
           <!-- 删除按钮 -->
           <view class="menu"
@@ -120,6 +120,11 @@ export default {
     setTimeout(function () {
       uni.stopPullDownRefresh();
     }, 1000);
+  },
+  computed: {
+    reverseListData () {
+      return this.goodsList.reverse()
+    }
   },
   onLoad () {
     this.getMallFavoritesByPage()

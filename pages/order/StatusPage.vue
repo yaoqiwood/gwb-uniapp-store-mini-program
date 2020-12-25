@@ -21,7 +21,8 @@
             v-if="returnBoolean">
         <view>
           确认收货倒计时:
-          <u-count-down style="padding-left:20upx"
+          <u-count-down separator="zh"
+                        style="padding-left:20upx"
                         :timestamp="confirmReceiveTimestamp" />
         </view>
       </view>
@@ -105,7 +106,8 @@ export default {
       })
       OrderMainApi.getMallOrderMainDetailById(id).then(resp => {
         this.orderData = resp
-        this.confirmReceiveTimestamp
+        let expressTime = new Date(resp.expressTime)
+        this.confirmReceiveTimestamp = ((expressTime.getTime() / 1000) + 10 * 24 * 60 * 60) - (new Date().getTime() / 1000)
         this.viewStatus = this.getEnumOrderStauts(resp.status) == 'getName' ? '加载中' : this.getEnumOrderStauts(resp.status)
         this.returnBoolean = this.hasShippedStatus(resp.status)
       })

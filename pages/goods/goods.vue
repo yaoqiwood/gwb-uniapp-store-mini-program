@@ -193,6 +193,29 @@
       </swiper>
       <view class="indicator">{{currentSwiper+1}}/{{swiperList.length}}</view>
     </view>
+
+    <view style="background-color:white;"
+          v-if="userInfObj.role == enumWxUserRoleType.STAFF.code">
+      <view style="display:flex; justify-content:center">
+        <u-upload ref="uSwipeUpload"
+                  :action="uploadAction"
+                  name="file"
+                  :max-size="8388608"
+                  :show-progress="true"
+                  :max-count="5"
+                  @on-list-change="onSwipeListChange"
+                  @on-uploaded="onSwipeImgSuccess"
+                  :auto-upload="false"
+                  :header="headerObj" />
+      </view>
+      <view style="display:flex;justify-content:center"
+            v-if="swipePhotoList.length > 0">
+        <u-button type="success"
+                  @click="uploadSwipePhotos"
+                  size="medium">上传照片</u-button>
+      </view>
+    </view>
+
     <!-- 标题 价格 -->
     <view class="info-box goods-info">
       <view class="price">￥{{goodsData.price}}</view>
@@ -272,7 +295,7 @@
                     :max-size="8388608"
                     :show-progress="true"
                     :max-count="5"
-                    @on-list-change="onListChange"
+                    @on-list-change="onSwipeListChange"
                     @on-uploaded="onImgSuccess"
                     :auto-upload="false"
                     :header="headerObj" />
@@ -359,6 +382,7 @@ export default {
       enumWxUserRoleType: ENUM_WX_USER_ROLE_TYPE,
       uploadAction: SystemApi.minioUploadAction,
       photoList: [],
+      swipePhotoList: [],
       headerObj: { 'X-Access-Token': Util.getToken() },
       showConfirmModal: false
     }
@@ -656,6 +680,9 @@ export default {
     onListChange (lists, name) {
       this.photoList = lists
     },
+    onSwipeListChange (lists, name) {
+      this.swipePhotoList = lists
+    },
     onImgSuccess (lists, name) {
       this.submitingShow = true
       this.uploadList = lists
@@ -694,11 +721,53 @@ export default {
         }, 2000)
       })
     },
+    onSwipeImgSuccess (lists, name) {
+      this.submitingShow = true
+      this.uploadSwipeList = lists
+      let params = {}
+      params.sysAnnexConfigInfoList = []
+      // console.log(lists)
+      lists.forEach(element => {
+        let obj = element.response.result
+        params.sysAnnexConfigInfoList.push(obj)
+      })
+
+      params.ptypeId = this.ptypeId
+
+      uni.showLoading({
+        title: '提交中...',
+        mask: true
+      })
+
+      PtypeApi.wxProductTypeSwipeAdd(params).then(resp => {
+        if (!resp) {
+          this.$refs['uToast'].show({
+            title: '提交失败',
+            type: 'error'
+          })
+          uni.hideLoading()
+          return
+        }
+        this.$refs['uToast'].show({
+          title: '提交成功 2秒后跳转',
+          type: 'success'
+        })
+        setTimeout(() => {
+          uni.reLaunch({
+            url: './goods?ptypeId=' + this.ptypeId
+          })
+        }, 2000)
+      })
+    },
+
     uploadPhotos () {
       this.showConfirmModal = true
     },
     submitForm () {
       this.$refs['uUpload'].upload()
+    },
+    uploadSwipePhotos () {
+      this.$refs['uSwipeUpload'].upload()
     }
   }
 };
