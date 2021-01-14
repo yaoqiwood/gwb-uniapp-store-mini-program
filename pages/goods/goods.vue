@@ -1,5 +1,25 @@
 <template>
   <view>
+    <view>
+      <view style="display:flex; justify-content:center">
+        <u-upload ref="goodsCoverUpload"
+                  :action="uploadAction"
+                  name="file"
+                  :max-size="8388608"
+                  :show-progress="true"
+                  :max-count="1"
+                  @on-list-change="onCoverListChange"
+                  @on-uploaded="onCoverImgSuccess"
+                  :auto-upload="false"
+                  :header="headerObj" />
+      </view>
+      <view style="display:flex;justify-content:center"
+            v-if="swipePhotoList.length > 0">
+        <u-button type="success"
+                  @click="uploadSwipePhotos"
+                  size="medium">上传照片</u-button>
+      </view>
+    </view>
     <view class="status"
           :style="{ opacity: afterHeaderOpacity }"></view>
     <view class="header">
@@ -46,11 +66,13 @@
     <view class="footer">
       <view class="icons">
         <view class="box"
+              v-if="false"
               @tap="share">
           <view class="icon fenxiang"></view>
           <view class="text">分享</view>
         </view>
-        <view class="box"
+        <view v-if="false"
+              class="box"
               @tap="toChat">
           <view class="icon kefu"></view>
           <view class="text">客服</view>
@@ -313,6 +335,7 @@
       <view class="holdPlace" />
     </view>
     <wx-user-phone-modal ref="wxUserPhoneModal" />
+    <account-login-modal ref="accountLoginModal" />
     <u-modal v-model="showConfirmModal"
              content="是否要进行照片上传"
              :show-cancel-button="true"
@@ -323,6 +346,7 @@
 
 <script>
 import WxUserPhoneModal from '@/pages/widgets/WxUserPhoneModal'
+import AccountLoginModal from '@/pages/widgets/AccountLoginModal'
 import GoodsApi from '@/api/goods/Goods'
 import MinioApi from '@/api/system/System'
 import SystemApi from '@/api/system/System'
@@ -331,7 +355,7 @@ import MallFavoritesApi from '@/api/favorites/MallFavorites'
 import Util from '@/util/Util'
 import { ENUM_CONFIRM_TYPE, ENUM_STATUS, ENUM_WX_USER_ROLE_TYPE } from '@/util/Constants'
 export default {
-  components: { WxUserPhoneModal },
+  components: { WxUserPhoneModal, AccountLoginModal },
   data () {
     return {
       //控制渐变标题栏的参数
@@ -383,6 +407,7 @@ export default {
       uploadAction: SystemApi.minioUploadAction,
       photoList: [],
       swipePhotoList: [],
+      coverPhotoList: [],
       headerObj: { 'X-Access-Token': Util.getToken() },
       showConfirmModal: false
     }
@@ -393,7 +418,7 @@ export default {
     this.showBack = false;
     this.ptypeId = option.ptypeId
     this.selectPtypeById(option.ptypeId)
-    this.checkPhoneNum()
+    // this.checkPhoneNum()
     // console.log(this.ptypeId)
     // #endif
     //option为object类型，会序列化上个页面传递的参数
@@ -467,6 +492,10 @@ export default {
     },
     //立即购买
     buy () {
+      if (!this.checkUserInfStatus()) {
+        return;
+      }
+
       this.confirmType = ENUM_CONFIRM_TYPE.BUY.code
       if (this.selectSpec == null) {
         return this.showSpec(() => {
@@ -677,11 +706,21 @@ export default {
         return
       }
     },
+    checkUserInfStatus () {
+      if (ENUM_STATUS.NOT_OBTAINED.code === Util.getCurrentUserInf().status.trim()) {
+        this.$refs['accountLoginModal'].openModal()
+        return false
+      }
+      return true
+    },
     onListChange (lists, name) {
       this.photoList = lists
     },
     onSwipeListChange (lists, name) {
       this.swipePhotoList = lists
+    },
+    onCoverListChange (lists, name) {
+      this.coverPhotoList = lists
     },
     onImgSuccess (lists, name) {
       this.submitingShow = true

@@ -26,6 +26,7 @@
       <!-- 头像 -->
       <view class="left">
         <image mode="aspectFill"
+               @tap="checkUserInfStatus"
                :src="user.face"></image>
       </view>
       <!-- 昵称,个性签名 -->
@@ -138,8 +139,7 @@ export default {
         username: '游客',
         face: '/static/img/gwb-img/default_avatar.png',
         // face: '/static/img/face.jpg',
-        // signature: '点击昵称以授权登录',
-        signature: '',
+        signature: '点击头像以授权登录',
         integral: 0,
         balance: 0,
         envelope: 0
@@ -189,6 +189,17 @@ export default {
     this.statusHeight = plus.navigator.getStatusbarHeight()
 
     // #endif
+
+    //此处，演示,每次页面初次渲染都把登录状态重置
+    if (!Util.getObtainedStatus()) {
+      this.user.username = '游客'
+      this.user.face = '/static/img/gwb-img/default_avatar.png'
+      this.user.signature = '点击头像以授权登录'
+      // 还未授权的情况
+    } else {
+      // 检查本地是否已经存在的用户信息
+      this.getSessionUserInf()
+    }
   },
   onReady () {
 
@@ -203,15 +214,9 @@ export default {
   },
   onShow () {
     //  检查用户状态
-    this.checkUserInfStatus()
+    //this.checkUserInfStatus()
 
-    //此处，演示,每次页面初次渲染都把登录状态重置
-    if (!Util.getObtainedStatus()) {
-      // 还未授权的情况
-    } else {
-      // 检查本地是否已经存在的用户信息
-      this.getSessionUserInf()
-    }
+
 
     // uni.getStorage({
     //   key: 'UserInfo',
@@ -237,6 +242,10 @@ export default {
       })
     },
     toOrderList (index) {
+      if (!this.checkUserInfStatus()) {
+        return;
+      }
+
       uni.setStorageSync('tbIndex', index);
       uni.navigateTo({ url: '../../user/order_list/order_list?tbIndex=' + index })
     },
@@ -276,6 +285,11 @@ export default {
         uni.showToast({ title: '模板未包含此页面', icon: "none" });
         return;
       }
+      // 检查是否存在登录
+
+      if (!this.checkUserInfStatus()) {
+        return;
+      }
 
       // address 不跳转 查找依赖微信
       if (url === 'address') {
@@ -306,9 +320,15 @@ export default {
       }
     },
     userObj (obj) {
+      if (obj.nickname == '' || obj.nickname == null) {
+        return
+      }
       this.user.username = obj.nickname
       this.user.face = obj.avatar
       this.user.signature = false
+      // uni.reLaunch({
+      //   url: './user'
+      // })
     },
     controlAccountLoginModal (bool) {
       if (bool) {
@@ -326,7 +346,7 @@ export default {
     },
     checkUserInfStatus () {
       if (ENUM_STATUS.NOT_OBTAINED.code === Util.getCurrentUserInf().status.trim()) {
-        this.$refs['accountLoginModal'].openModal(true)
+        this.$refs['accountLoginModal'].openModal()
         return false
       }
       return true

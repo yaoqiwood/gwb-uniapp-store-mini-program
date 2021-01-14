@@ -460,10 +460,10 @@ export default {
     },
     toGoodsNav (id) {
       // console.log(Util.getCurrentUserInf())
-      if (ENUM_STATUS.NOT_OBTAINED.code === Util.getCurrentUserInf().status.trim()) {
-        this.$refs['accountLoginModal'].openModal()
-        return
-      }
+      // if (ENUM_STATUS.NOT_OBTAINED.code === Util.getCurrentUserInf().status.trim()) {
+      //   this.$refs['accountLoginModal'].openModal()
+      //   return
+      // }
       uni.navigateTo({
         url: '../../goods/goods?ptypeId=' + id
       })

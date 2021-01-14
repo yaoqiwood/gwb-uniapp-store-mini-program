@@ -9,6 +9,7 @@
           style="z-index:100">
       <view class="modal-upper-back">
         <image src="@/static/img/gwb-img/grzx_bg.png"></image>
+        <!-- <view class="modal-text">X</view> -->
         <view class="modal-text">需要授权手机号码才可以进行后续的操作</view>
         <button type="primary"
                 open-type="getPhoneNumber"

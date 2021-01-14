@@ -1,11 +1,13 @@
 <template>
   <view>
     <view v-if="switch2Display || defaultDisplay"
-          class="layer"
-          @click="closeModal">
+          class="layer">
+      <!-- @click="closeModal" -->
       <view class="modal">
         <view class="modal-upper-back">
           <image src="@/static/img/gwb-img/grzx_bg.png"></image>
+          <view class="close-btn"
+                @click="closeModal">X</view>
           <view class="modal-text">需要授权登录才可以进行后续的操作</view>
           <button type="primary"
                   open-type="getUserInfo"
@@ -74,9 +76,10 @@ export default {
             })
             this.defaultDisplay = false
             this.$emit("setWxUserInf", obj)
-            uni.reLaunch({
-              url: '../home/home'
-            })
+            this.closeModal()
+            // uni.reLaunch({
+            //   url: '../home/home'
+            // })
           })
         }
       })

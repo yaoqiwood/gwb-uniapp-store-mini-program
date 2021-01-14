@@ -90,11 +90,14 @@
               @tap="toConfirmation">结算({{selectedList.length}})</view>
       </view>
     </view>
+    <account-login-modal ref="accountLoginModal" />
   </view>
 </template>
 
 <script>
 import Util from '@/util/Util'
+import { ENUM_STATUS } from '@/util/Constants'
+import AccountLoginModal from '../../widgets/AccountLoginModal'
 export default {
   data () {
     return {
@@ -237,6 +240,10 @@ export default {
           tmpList.push(this.goodsList[i]);
         }
       }
+      if (!this.checkUserInfStatus()) {
+        return;
+      }
+
       if (tmpList.length < 1) {
         uni.showToast({
           title: '请选择商品结算',
@@ -244,6 +251,9 @@ export default {
         });
         return;
       }
+      // 检查登录状态
+
+
       uni.setStorage({
         key: 'buylist',
         data: tmpList,
@@ -361,7 +371,17 @@ export default {
         index += 1
       })
       return index
+    },
+    checkUserInfStatus () {
+      if (ENUM_STATUS.NOT_OBTAINED.code === Util.getCurrentUserInf().status.trim()) {
+        this.$refs['accountLoginModal'].openModal()
+        return false
+      }
+      return true
     }
+  },
+  components: {
+    AccountLoginModal
   }
 }
 </script>

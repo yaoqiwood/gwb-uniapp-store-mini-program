@@ -64,7 +64,8 @@
         </view>
       </scroll-view>
     </view>
-    <account-login-modal ref="accountLoginModal" />
+    <account-login-modal ref="accountLoginModal"
+                         @setWxUserInf="setWxUserInf" />
   </view>
 </template>
 <script>
@@ -115,7 +116,7 @@ export default {
   },
   onShow () {
     // 检查用户情况
-    this.checkUserInfStatus()
+    // this.checkUserInfStatus()
   },
   methods: {
     //消息列表
@@ -159,7 +160,8 @@ export default {
         return false
       }
       return true
-    }
+    },
+    setWxUserInf () { }
   },
   components: { AccountLoginModal }
 }
