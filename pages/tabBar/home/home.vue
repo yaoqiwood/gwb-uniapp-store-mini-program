@@ -118,7 +118,9 @@
                 v-for="item in hotItemArray"
                 :key="item.itemId"
                 @tap="toGoodsNav(item.itemId)">
-            <cover-image :src="item.img"></cover-image>
+            <image :src="item.img"
+                   mode="heightFix"
+                   style="height:80px"></image>
             <view class="hot_item_text">
               <text>{{item.itemName}}</text>
             </view>

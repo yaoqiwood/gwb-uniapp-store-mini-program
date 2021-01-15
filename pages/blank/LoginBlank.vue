@@ -1,5 +1,9 @@
 <template>
-  <view></view>
+  <view>
+    <image style="position:absolute;left:50%;top:48%;transform:translate(-52%,-100%)"
+           mode="widthFix"
+           src="/static/img/loading/replayLoadingGif.gif"></image>
+  </view>
 </template>
 
 <script>
@@ -31,5 +35,5 @@ export default {
   }
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 </style>

@@ -14,9 +14,9 @@
                   :header="headerObj" />
       </view>
       <view style="display:flex;justify-content:center"
-            v-if="swipePhotoList.length > 0">
+            v-if="coverPhotoList.length > 0">
         <u-button type="success"
-                  @click="uploadSwipePhotos"
+                  @click="uploadCoverPhotos"
                   size="medium">上传照片</u-button>
       </view>
     </view>
@@ -798,7 +798,44 @@ export default {
         }, 2000)
       })
     },
+    onCoverImgSuccess (lists, name) {
+      this.submitingShow = true
+      this.coverPhotoList = lists
+      let params = {}
+      params.sysAnnexConfigInfoList = []
+      // console.log(lists)
+      lists.forEach(element => {
+        let obj = element.response.result
+        params.sysAnnexConfigInfoList.push(obj)
+      })
 
+      params.ptypeId = this.ptypeId
+
+      uni.showLoading({
+        title: '提交中...',
+        mask: true
+      })
+
+      PtypeApi.wxProductCoverImgAdd(params).then(resp => {
+        if (!resp) {
+          this.$refs['uToast'].show({
+            title: '提交失败',
+            type: 'error'
+          })
+          uni.hideLoading()
+          return
+        }
+        this.$refs['uToast'].show({
+          title: '提交成功 2秒后跳转',
+          type: 'success'
+        })
+        setTimeout(() => {
+          uni.reLaunch({
+            url: './goods?ptypeId=' + this.ptypeId
+          })
+        }, 2000)
+      })
+    },
     uploadPhotos () {
       this.showConfirmModal = true
     },
@@ -807,6 +844,9 @@ export default {
     },
     uploadSwipePhotos () {
       this.$refs['uSwipeUpload'].upload()
+    },
+    uploadCoverPhotos () {
+      this.$refs['goodsCoverUpload'].upload()
     }
   }
 };
