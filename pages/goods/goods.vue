@@ -1,6 +1,6 @@
 <template>
   <view>
-    <view>
+    <view v-if="userInfObj.role == enumWxUserRoleType.STAFF.code">
       <view style="display:flex; justify-content:center">
         <u-upload ref="goodsCoverUpload"
                   :action="uploadAction"

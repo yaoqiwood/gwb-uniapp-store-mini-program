@@ -28,7 +28,6 @@
           {{recinfo.detailInfo}}
         </view>
       </view>
-
     </view>
     <!-- 购买商品列表 -->
     <view class="buy-list">
@@ -130,6 +129,7 @@
               @tap="toPay">提交订单</view>
       </view>
     </view>
+    <u-toast ref="uToast" />
   </view>
 </template>
 
@@ -216,11 +216,27 @@ export default {
     },
     toPay () {
       if (this.expressIndex === 0) {
-        uni.showToast({ title: '请选择物流方式后尝试重新提交订单', icon: 'none' })
+        this.$refs.uToast.show({
+          title: '请选择物流方式后尝试重新提交订单',
+          type: 'warning'
+        })
+        // uni.showToast({ title: '请选择物流方式后尝试重新提交订单', icon: 'none' })
         return
       }
       if (this.noneDefaultAddressKey) {
-        uni.showToast({ title: '缺少收货地址信息,请填写收货地址后重试提交订单', icon: 'none' })
+        this.$refs.uToast.show({
+          title: '缺少收货地址信息,请填写收货地址后重试提交订单',
+          type: 'warning'
+        })
+        // uni.showToast({ title: '缺少收货地址信息,请填写收货地址后重试提交订单', icon: 'none' })
+        return
+      }
+      // 检查备注信息
+      if (50 < this.note.length) {
+        this.$refs.uToast.show({
+          title: '备注信息不可以超出50个字符',
+          type: 'warning'
+        })
         return
       }
       //商品列表

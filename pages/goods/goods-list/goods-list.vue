@@ -204,6 +204,7 @@ export default {
     },
     toSearch () {
       this.pfullname = this.searchWord
+      this.currentStep = 1
       this.loadData(this.currentStep, this.pfullname, this.parId, this.orderColumn, this.order)
     },
     loadData (currentStep, pfullname, parId, orderColumn, order) {
