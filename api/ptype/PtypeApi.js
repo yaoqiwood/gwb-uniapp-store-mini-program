@@ -6,5 +6,8 @@ export default {
   },
   wxProductTypeSwipeAdd (params) {
     return Util.put('/gwb/ptype/wxProductTypeSwipeAdd', params)
+  },
+  wxProductCoverImgAdd (params) {
+    return Util.put('/gwb/ptype/wxProductCoverImgAdd', params)
   }
 }
