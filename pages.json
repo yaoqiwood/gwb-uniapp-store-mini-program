@@ -7,7 +7,7 @@
     {
       "path": "pages/blank/LoginBlank",
       "style": {
-        "navigationBarTitleText": "正在登录",
+        "navigationBarTitleText": "正在加载...",
         "enablePullDownRefresh": false,
         "backgroundColorTop": "#ffffff",
         "backgroundColorBottom": "#ffffff",
@@ -123,19 +123,19 @@
         }
       }
     },
-    {
-      "path": "pages/login/login",
-      "style": {
-        "navigationBarTitleText": "登录",
-        "navigationBarBackgroundColor": "#f06c7a",
-        "navigationBarTextStyle": "white",
-        "app-plus": {
-          "bounce": "none",
-          //关闭窗口回弹效果
-          "softinputNavBar": "none"
-        }
-      }
-    },
+    // {
+    //   "path": "pages/login/login",
+    //   "style": {
+    //     "navigationBarTitleText": "登录",
+    //     "navigationBarBackgroundColor": "#f06c7a",
+    //     "navigationBarTextStyle": "white",
+    //     "app-plus": {
+    //       "bounce": "none",
+    //       //关闭窗口回弹效果
+    //       "softinputNavBar": "none"
+    //     }
+    //   }
+    // },
     // {
     //   "path": "pages/login/register",
     //   "style": {
@@ -217,17 +217,17 @@
         }
       }
     },
-    {
-      "path": "pages/user/coupon/coupon",
-      "style": {
-        "navigationBarTitleText": "优惠券",
-        "navigationBarBackgroundColor": "#f06c7a",
-        "navigationBarTextStyle": "white",
-        "app-plus": {
-          "bounce": "none"
-        }
-      }
-    },
+    // {
+    //   "path": "pages/user/coupon/coupon",
+    //   "style": {
+    //     "navigationBarTitleText": "优惠券",
+    //     "navigationBarBackgroundColor": "#f06c7a",
+    //     "navigationBarTextStyle": "white",
+    //     "app-plus": {
+    //       "bounce": "none"
+    //     }
+    //   }
+    // },
     {
       "path": "pages/user/keep/keep",
       "style": {
@@ -241,24 +241,24 @@
         }
       }
     },
-    {
-      "path": "pages/user/address/address",
-      "style": {
-        "navigationBarBackgroundColor": "#ffffff",
-        "navigationBarTitleText": "地址管理",
-        "backgroundColorTop": "#ffffff",
-        "backgroundColorBottom": "#ffffff"
-      }
-    },
-    {
-      "path": "pages/user/address/edit/edit",
-      "style": {
-        "navigationBarBackgroundColor": "#ffffff",
-        "navigationBarTitleText": "编辑收件人地址",
-        "backgroundColorTop": "#ffffff",
-        "backgroundColorBottom": "#ffffff"
-      }
-    },
+    // {
+    //   "path": "pages/user/address/address",
+    //   "style": {
+    //     "navigationBarBackgroundColor": "#ffffff",
+    //     "navigationBarTitleText": "地址管理",
+    //     "backgroundColorTop": "#ffffff",
+    //     "backgroundColorBottom": "#ffffff"
+    //   }
+    // },
+    // {
+    //   "path": "pages/user/address/edit/edit",
+    //   "style": {
+    //     "navigationBarBackgroundColor": "#ffffff",
+    //     "navigationBarTitleText": "编辑收件人地址",
+    //     "backgroundColorTop": "#ffffff",
+    //     "backgroundColorBottom": "#ffffff"
+    //   }
+    // },
     // {
     //   "path": "pages/user/deposit/deposit",
     //   "style": {
@@ -339,6 +339,30 @@
         "navigationBarBackgroundColor": "#f8f8f8",
         "backgroundColorTop": "#f3f3f3",
         "backgroundColorBottom": "#ffffff"
+      }
+    },
+    {
+      "path":"pages/phoneNumGetter/PhoneNumGetter",
+      "style": {
+        "enablePullDownRefresh": true,
+        "backgroundTextStyle": "light",
+        //        "navigationBarBackgroundColor": "#f06c7a",
+        "navigationBarBackgroundColor": "#FF3E3E",
+        //        "backgroundColorTop": "#f06c7a",
+        "backgroundColorTop": "#FF3E3E",
+        "navigationBarTextStyle": "white",
+        "navigationBarTitleText": "",
+        "app-plus": {
+          "titleNView": false,
+          //禁用原生导航栏
+          "subNVues": [{
+            "id": "userTitleNvue",
+            // 唯一标识
+            "path": "pages/tabBar/user/subNvue/userTitleNvue",
+            // 页面路径
+            "type": "navigationBar"
+          }]
+        }
       }
     }
   ],

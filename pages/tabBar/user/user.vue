@@ -202,7 +202,9 @@ export default {
     }
   },
   onReady () {
-
+    setTimeout(() => {
+      this.checkPhoneNum()
+    }, 500);
     // uni.setStorage({
     //   key: 'UserInfo',
     //   data: false,
@@ -215,7 +217,6 @@ export default {
   onShow () {
     //  检查用户状态
     //this.checkUserInfStatus()
-
 
 
     // uni.getStorage({
@@ -350,6 +351,13 @@ export default {
         return false
       }
       return true
+    },
+    checkPhoneNum () {
+      if (null === Util.getCurrentUserInf().phoneNum || Util.getCurrentUserInf().phoneNum == '') {
+        uni.navigateTo({
+          url: '../../phoneNumGetter/PhoneNumGetter'
+        })
+      }
     }
   },
   components: {

@@ -1,0 +1,62 @@
+.user-bg {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  z-index: -1;
+}
+
+.phoneNumGetter-Box{
+  position: relative;
+  background-color: #302F35;
+  opacity: 0.99;
+  width:90%;
+  height:460upx;
+  z-index: 1;
+  top:270upx;
+  border-radius: 12px;
+
+
+  .png_inner_title{
+    margin-top: 40px;
+  }
+
+  .png_inner_second_title{
+    margin-top: 20px;
+  }
+
+  .png-box_font{
+    color: #FDE2D5;
+    font-size: 16px;
+    letter-spacing: 1px;
+  }
+
+  .small_font{
+    font-size: 14px;
+    letter-spacing: 1px;
+  }
+
+  .png_btn-group{
+    margin-top: 15px;
+    font-weight: 700;
+    .getPhoneNumBtn , .back_btn{
+      width: 100%;
+      // width: 100%;
+      height: 60upx;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+
+    .gpnb_box ,.bt_box{
+      position: relative;
+      width: 50%;
+      height: 60upx;
+      line-height: 60upx;
+      background-color: #EDCFB3;
+      border-radius: 15px;
+    }
+  }
+}
+
+
