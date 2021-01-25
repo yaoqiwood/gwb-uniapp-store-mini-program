@@ -204,7 +204,7 @@ export default {
     // });
   },
   onShow () {
-    console.log(Util.getCurrentUserInf())
+    // console.log(Util.getCurrentUserInf())
     //此处，演示,每次页面初次渲染都把登录状态重置
     if (!Util.getObtainedStatus()) {
       this.user.username = '游客'
