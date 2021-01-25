@@ -388,6 +388,17 @@ page {
     height: 80upx;
     margin-left: -4%;
 
+    .chatBoxBtn{
+      position: relative;
+      button{
+        position: absolute;
+        top:0;
+        width: 25upx;
+        height: 100%;
+        opacity: 0;
+      }
+    }
+
     .box {
       width: 80upx;
       height: 80upx;

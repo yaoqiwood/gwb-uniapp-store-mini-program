@@ -79,7 +79,9 @@ export default {
               uni.showToast({
                 title: '绑定成功'
               })
-              this.navigateBack()
+              setTimeout(() => {
+                this.navigateBack()
+              }, 1200);
               // this.switch2Display = false
             })
           } else if (e.detail.errMsg == 'getPhoneNumber:fail user deny') {

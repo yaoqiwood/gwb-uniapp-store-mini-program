@@ -189,17 +189,6 @@ export default {
     this.statusHeight = plus.navigator.getStatusbarHeight()
 
     // #endif
-
-    //此处，演示,每次页面初次渲染都把登录状态重置
-    if (!Util.getObtainedStatus()) {
-      this.user.username = '游客'
-      this.user.face = '/static/img/gwb-img/default_avatar.png'
-      this.user.signature = '点击头像以授权登录'
-      // 还未授权的情况
-    } else {
-      // 检查本地是否已经存在的用户信息
-      this.getSessionUserInf()
-    }
   },
   onReady () {
     setTimeout(() => {
@@ -215,25 +204,17 @@ export default {
     // });
   },
   onShow () {
-    //  检查用户状态
-    //this.checkUserInfStatus()
-
-
-    // uni.getStorage({
-    //   key: 'UserInfo',
-    //   success: (res) => {
-    //     if (!res.data) {
-    //       if (this.isfirst) {
-    //         //this.toLogin();
-    //       }
-    //       return;
-    //     }
-    //     this.user = res.data;
-    //   },
-    //   fail: (e) => {
-    //     //this.toLogin();
-    //   }
-    // });
+    console.log(Util.getCurrentUserInf())
+    //此处，演示,每次页面初次渲染都把登录状态重置
+    if (!Util.getObtainedStatus()) {
+      this.user.username = '游客'
+      this.user.face = '/static/img/gwb-img/default_avatar.png'
+      this.user.signature = '点击头像以授权登录'
+      // 还未授权的情况
+    } else {
+      // 检查本地是否已经存在的用户信息
+      this.getSessionUserInf()
+    }
   },
   methods: {
     //消息列表

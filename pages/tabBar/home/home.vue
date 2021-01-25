@@ -24,11 +24,14 @@
       </view>
       <!-- 右侧图标按钮 -->
       <view class="icon-btn">
-        <view class="icon"
-              @tap="toMsg">
+        <view class="icon">
           <!--					<contact-button></contact-button>-->
           <image open-type="contact"
                  src="/static/img/gwb-img/customer_service.png"></image>
+          <button open-type="contact"
+                  class="button-msg">
+            咨询
+          </button>
         </view>
         <!-- <view class="icon tongzhi"></view> -->
       </view>

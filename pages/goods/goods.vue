@@ -71,11 +71,14 @@
           <view class="icon fenxiang"></view>
           <view class="text">分享</view>
         </view>
-        <view v-if="false"
-              class="box"
-              @tap="toChat">
+        <!-- @tap="toChat" -->
+        <view class="box chatBoxBtn">
           <view class="icon kefu"></view>
           <view class="text">客服</view>
+          <button open-type="contact"
+                  class="button-msg">
+            咨询
+          </button>
         </view>
         <view class="box"
               @tap="keep">
@@ -334,7 +337,7 @@
       </view>
       <view class="holdPlace" />
     </view>
-    <wx-user-phone-modal ref="wxUserPhoneModal" />
+    <!-- <wx-user-phone-modal ref="wxUserPhoneModal" /> -->
     <account-login-modal ref="accountLoginModal" />
     <u-modal v-model="showConfirmModal"
              content="是否要进行照片上传"
@@ -345,7 +348,7 @@
 </template> 
 
 <script>
-import WxUserPhoneModal from '@/pages/widgets/WxUserPhoneModal'
+// import WxUserPhoneModal from '@/pages/widgets/WxUserPhoneModal'
 import AccountLoginModal from '@/pages/widgets/AccountLoginModal'
 import GoodsApi from '@/api/goods/Goods'
 import MinioApi from '@/api/system/System'
@@ -355,7 +358,7 @@ import MallFavoritesApi from '@/api/favorites/MallFavorites'
 import Util from '@/util/Util'
 import { ENUM_CONFIRM_TYPE, ENUM_STATUS, ENUM_WX_USER_ROLE_TYPE } from '@/util/Constants'
 export default {
-  components: { WxUserPhoneModal, AccountLoginModal },
+  components: { AccountLoginModal },
   data () {
     return {
       //控制渐变标题栏的参数
@@ -482,6 +485,9 @@ export default {
     },
     // 加入购物车
     joinCart () {
+      if (!this.checkPhoneNum()) {
+        return;
+      }
       this.confirmType = ENUM_CONFIRM_TYPE.CART.code
       if (this.selectSpec == null) {
         return this.showSpec(() => {
@@ -492,6 +498,9 @@ export default {
     },
     //立即购买
     buy () {
+      if (!this.checkPhoneNum()) {
+        return;
+      }
       if (!this.checkUserInfStatus()) {
         return;
       }
@@ -699,15 +708,8 @@ export default {
       MallFavoritesApi.addOrCancelFavoritesItem(params).then(resp => {
       })
     },
-    checkPhoneNum () {
-      if (ENUM_STATUS.NOT_PHONE_NUM.code === Util.getCurrentUserInf().status.trim()) {
-        this.$refs['wxUserPhoneModal'].openModal()
-        // this.hidePop()
-        return
-      }
-    },
     checkUserInfStatus () {
-      if (ENUM_STATUS.NOT_OBTAINED.code === Util.getCurrentUserInf().status.trim()) {
+      if (ENUM_STATUS.NOT_OBTAINED.code == Util.getCurrentUserInf().status.trim()) {
         this.$refs['accountLoginModal'].openModal()
         return false
       }
@@ -847,6 +849,15 @@ export default {
     },
     uploadCoverPhotos () {
       this.$refs['goodsCoverUpload'].upload()
+    },
+    checkPhoneNum () {
+      if (null === Util.getCurrentUserInf().phoneNum || Util.getCurrentUserInf().phoneNum == '') {
+        uni.navigateTo({
+          url: '../phoneNumGetter/PhoneNumGetter'
+        })
+        return false;
+      }
+      return true;
     }
   }
 };

@@ -104,6 +104,8 @@ page {
     height: 60upx;
     flex-shrink: 0;
     display: flex;
+    // overflow: hidden;
+    
 
     .icon {
       width: 60upx;
@@ -112,6 +114,16 @@ page {
       justify-content: flex-end;
       align-items: center;
       font-size: 42upx;
+    }
+
+    button{
+      opacity:0;
+      // z-index: -1;
+      position: absolute;
+      width: 10upx;
+      height:60upx;
+      // height:10p
+      
     }
   }
 }

@@ -232,6 +232,9 @@ export default {
     },
     //跳转确认订单页面
     toConfirmation () {
+      if (!this.checkPhoneNum()) {
+        return;
+      }
       let tmpList = [];
       let len = this.goodsList.length;
       for (let i = 0; i < len; i++) {
@@ -378,6 +381,15 @@ export default {
         return false
       }
       return true
+    },
+    checkPhoneNum () {
+      if (null === Util.getCurrentUserInf().phoneNum || Util.getCurrentUserInf().phoneNum == '') {
+        uni.navigateTo({
+          url: '../../phoneNumGetter/PhoneNumGetter'
+        })
+        return false;
+      }
+      return true;
     }
   },
   components: {
