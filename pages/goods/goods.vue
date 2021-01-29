@@ -320,7 +320,7 @@
                     :max-size="8388608"
                     :show-progress="true"
                     :max-count="5"
-                    @on-list-change="onSwipeListChange"
+                    @on-list-change="onListChange"
                     @on-uploaded="onImgSuccess"
                     :auto-upload="false"
                     :header="headerObj" />

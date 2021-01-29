@@ -432,7 +432,8 @@ page {
   .hot_items {
     //width: 195upx;
     width: 33%;
-    height: 290upx;
+    min-height: auto;
+		padding-bottom: 10upx;
     border: 1px solid #eee;
     display: flex;
     justify-content: center;
