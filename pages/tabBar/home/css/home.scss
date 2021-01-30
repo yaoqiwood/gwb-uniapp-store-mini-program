@@ -498,6 +498,21 @@ page {
   height: 300upx;
 }
 
+.previewImg{
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	top:0;
+	width: 100%;
+	height: 100%;
+	background-color: #FBFBFB;
+	z-index:999;
+	image{
+		position: relative;
+		top:120px;
+	}
+}
+
 //
 //.customer_logo{
 //	background-image: url("/static/img/gwb-img/customer_service.png");

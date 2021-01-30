@@ -165,6 +165,10 @@
       </view>
     </view>
     <account-login-modal ref="accountLoginModal" />
+		<view class="previewImg"
+					v-if="previewMode">
+			<image src="../../../static/img/gwb-img/default_avatar.png"></image>
+		</view>
   </view>
 </template>
 
@@ -175,7 +179,7 @@ import amap from '@/common/SDK/amap-wx.js'
 import Util from '@/util/Util'
 import HomeApi from '@/api/home/Home'
 import SystemApi from '@/api/system/System'
-import { ENUM_STATUS } from '@/util/Constants'
+import { ENUM_STATUS, ENUM_PAGE_TYPE } from '@/util/Constants'
 import AccountLoginModal from '@/pages/widgets/AccountLoginModal'
 
 export default {
@@ -222,34 +226,6 @@ export default {
         // 	price: '168',
         // 	slogan: '1235人付款'
         // },
-        // {
-        // 	goods_id: 1,
-        // 	img: '/static/img/goods/p2.jpg',
-        // 	name: '商品名称商品名称商品名称商品名称商品名称',
-        // 	price: '168',
-        // 	slogan: '1235人付款'
-        // },
-        // {
-        // 	goods_id: 2,
-        // 	img: '/static/img/goods/p3.jpg',
-        // 	name: '商品名称商品名称商品名称商品名称商品名称',
-        // 	price: '168',
-        // 	slogan: '1235人付款'
-        // },
-        // {
-        // 	goods_id: 3,
-        // 	img: '/static/img/goods/p4.jpg',
-        // 	name: '商品名称商品名称商品名称商品名称商品名称',
-        // 	price: '168',
-        // 	slogan: '1235人付款'
-        // },
-        // {
-        // 	goods_id: 4,
-        // 	img: '/static/img/goods/p5.jpg',
-        // 	name: '商品名称商品名称商品名称商品名称商品名称',
-        // 	price: '168',
-        // 	slogan: '1235人付款'
-        // }
       ],
       loadingText: '正在加载...',
       hotItemArray: [
@@ -259,20 +235,8 @@ export default {
         // 	itemName: '正品保障Mobil美孚黑霸王15W-40机油4L',
         // 	price: 95,
         // 	oldPrice: 120
-        // }, {
-        // 	itemId: 1,
-        // 	img: '/static/img/gwb-img/mobil_cover1.jpg',
-        // 	itemName: '正品保障Mobil美孚黑霸王15W-40机油4L',
-        // 	price: 95,
-        // 	oldPrice: 120
-        // }, {
-        // 	itemId: 2,
-        // 	img: '/static/img/gwb-img/mobil_cover1.jpg',
-        // 	itemName: '正品保障Mobil美孚黑霸王15W-40机油4L',
-        // 	price: 95,
-        // 	oldPrice: 120
-        // }
-      ]
+      ],
+			previewMode:false
     }
   },
   onPageScroll (e) {
@@ -321,8 +285,16 @@ export default {
     // 	Util.login()
     // }
   },
-  onLoad () {
+  onLoad (option) {
     if (!Util.getToken()) {
+			switch(option.viewType){
+				case ENUM_PAGE_TYPE.PREVIEW.code:
+					this.previewMode = true
+					// uni.reLaunch({
+					// 	url: '../../blank/LoginBlank'
+					// })
+					break;
+			}
     }
     // uni.reLaunch({
     // 	url: '../../blank/LoginBlank'
@@ -342,6 +314,18 @@ export default {
     // 加载用户信息
     this.reNewUserInf()
   },
+	onShareAppMessage(res) {
+		return {
+			title: '广挖宝',
+			path: '/pages/blank/LoginBlank'
+		}
+	},
+	onShareTimeline(res){
+		return {
+			title: '广挖宝',
+			query: 'viewType=' + ENUM_PAGE_TYPE.PREVIEW.code
+		}
+	},
   methods: {
     //加载Promotion 并设定倒计时,,实际应用中应该是ajax加载此数据。
     loadPromotion () {

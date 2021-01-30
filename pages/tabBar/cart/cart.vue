@@ -127,6 +127,12 @@ export default {
     this.headerTop = e.scrollTop >= 0 ? null : 0;
     this.statusTop = e.scrollTop >= 0 ? null : -this.statusHeight + 'px';
   },
+	// onShareAppMessage(res) {
+	// 	return {
+	// 		title: '广挖宝',
+	// 		path: '/pages/blank/LoginBlank'
+	// 	}
+	// },
   //下拉刷新，需要自己在page.json文件中配置开启页面下拉刷新 "enablePullDownRefresh": true
   onPullDownRefresh () {
     setTimeout(function () {

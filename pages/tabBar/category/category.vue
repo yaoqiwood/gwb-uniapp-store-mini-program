@@ -74,7 +74,7 @@ import amap from '@/common/SDK/amap-wx.js';
 import CategoryApi from '@/api/category/Category'
 import SystemApi from '@/api/system/System'
 import AccountLoginModal from '../../widgets/AccountLoginModal'
-import { ENUM_TASK_BAR, ENUM_STATUS } from '@/util/Constants'
+import { ENUM_TASK_BAR, ENUM_STATUS, ENUM_PAGE_TYPE } from '@/util/Constants'
 import Util from '@/util/Util'
 
 export default {
@@ -96,6 +96,12 @@ export default {
       this.headerPosition = "absolute";
     }
   },
+	onShareAppMessage(res) {
+		return {
+			title: '广挖宝',
+			path: '/pages/blank/LoginBlank?pageType=' + ENUM_PAGE_TYPE.CATEGORY.code
+		}
+	},
   created () {
   },
   onLoad () {

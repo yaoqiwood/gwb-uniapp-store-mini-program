@@ -240,6 +240,25 @@ const ENUM_WX_USER_ROLE_TYPE = {
 	}
 }
 
+const ENUM_PAGE_TYPE = {
+	HOME: {
+		name:'首页',
+		code:'home'
+	},
+	CATEGORY :{
+		name:'分类',
+		code:'category'
+	},
+	PRODUCT:{
+		name:'商品',
+		code:'product'
+	},
+	PREVIEW:{
+		name:'朋友圈预览',
+		code:'preview'
+	}
+}
+
 
 export {
 	ENUM_STATUS,
@@ -250,5 +269,6 @@ export {
 	ENUM_CONFIRM_TYPE,
 	ENUM_SHIPPING_METHOD,
 	ENUM_RE_TYPE,
-	ENUM_WX_USER_ROLE_TYPE
+	ENUM_WX_USER_ROLE_TYPE,
+	ENUM_PAGE_TYPE
 }

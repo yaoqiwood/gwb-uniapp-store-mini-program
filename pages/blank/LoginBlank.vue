@@ -21,19 +21,31 @@
 <script>
 import Util from '@/util/Util'
 import SystemApi from '@/api/system/System'
+import { ENUM_PAGE_TYPE } from '@/util/Constants'
 
 export default {
   data () {
     return {}
   },
-  onLoad () {
+  onLoad (option) {
     uni.showLoading({
       title: '正在登录......',
       mask: true
     })
     SystemApi.checkLoginStatus().then(resp => {
       if (resp.status) {
-        Util.goto('/pages/tabBar/home/home')
+				// console.log(option)
+				if (JSON.stringify(option) == '{}'){
+					Util.goto('/pages/tabBar/home/home')
+				} else {
+					switch(option.pageType){
+						case ENUM_PAGE_TYPE.CATEGORY.code :
+							Util.goto('/pages/tabBar/category/category')
+							break
+						case ENUM_PAGE_TYPE.PRODUCT.code:
+							Util.goto('/pages/goods/goods?ptypeId=' + option.ptypeId)
+					}
+				}
       }
       uni.hideLoading()
     })

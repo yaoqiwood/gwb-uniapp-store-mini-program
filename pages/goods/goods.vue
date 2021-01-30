@@ -452,6 +452,12 @@ export default {
   mounted () {
 
   },
+	onShareAppMessage(res) {
+		return {
+			title: '广挖宝',
+			path: '/pages/blank/LoginBlank?pageType=' + ENUM_PAGE_TYPE.PRODUCT.code + "&ptypeId=" + this.ptypeId
+		}
+	},
   methods: {
     //轮播图指示器
     swiperChange (event) {
