@@ -44,7 +44,8 @@
       <view class="swiper-box">
         <swiper circular="true"
                 autoplay="true"
-                @change="swiperChange">
+                @change="swiperChange"
+								@tap="tapCurrentNum2EnablePhoto">
           <swiper-item v-for="swiper in swiperList"
                        :key="swiper.id">
             <!--						<image mode="aspectFit" :src="swiper.img"></image>-->
@@ -236,9 +237,14 @@ export default {
         // 	price: 95,
         // 	oldPrice: 120
       ],
-			previewMode:false
+			previewMode:false,
+			currentTapCount:0
     }
   },
+	onShow() {
+		// initNum
+		this.currentTapCount = 0
+	},
   onPageScroll (e) {
     //兼容iOS端下拉时顶部漂移
     this.headerPosition = e.scrollTop >= 0 ? "fixed" : "absolute";
@@ -286,6 +292,7 @@ export default {
     // }
   },
   onLoad (option) {
+		// 初始化处理
     if (!Util.getToken()) {
 			switch(option.viewType){
 				case ENUM_PAGE_TYPE.PREVIEW.code:
@@ -550,6 +557,9 @@ export default {
     //搜索跳转
     toSearch () {
       let pfullname = this.searchWord
+			// 检测是否有关键字
+			this.enablePhoto2OpenMode(pfullname)
+			// 开始跳转
       uni.navigateTo({
         url: '../../goods/goods-list/goods-list?pfullname=' + pfullname
       })
@@ -568,7 +578,18 @@ export default {
         Util.setRetAddressInf(resp)
         uni.hideLoading()
       })
-    }
+    },
+		tapCurrentNum2EnablePhoto(){
+			this.currentTapCount ++
+		},
+		enablePhoto2OpenMode(val){
+			if (val == 'fzscgwb'){
+				Util.setCurrentUserPhotoAllow(true)
+				uni.showToast({
+					title: '开启成功'
+				})
+			}
+		}
   },
   computed: {
     imgStyle: (item) => {

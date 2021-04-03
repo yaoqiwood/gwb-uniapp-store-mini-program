@@ -1,6 +1,6 @@
 <template>
   <view>
-    <view v-if="userInfObj.role == enumWxUserRoleType.STAFF.code">
+    <view v-if="userInfObj.role == enumWxUserRoleType.STAFF.code && switch2Show">
       <view style="display:flex; justify-content:center">
         <u-upload ref="goodsCoverUpload"
                   :action="uploadAction"
@@ -19,6 +19,9 @@
                   @click="uploadCoverPhotos"
                   size="medium">上传照片</u-button>
       </view>
+			<u-switch v-model="switchChange"
+								@change="uSwitchChange">
+			</u-switch>
     </view>
     <view class="status"
           :style="{ opacity: afterHeaderOpacity }"></view>
@@ -213,14 +216,15 @@
               @change="swiperChange">
         <swiper-item v-for="swiper in swiperList"
                      :key="swiper.saciId">
-          <image :src="getMinioImg(swiper.storagePath,swiper.newAnnexName)"></image>
+          <image  mode="widthFix"
+									:src="getMinioImg(swiper.storagePath,swiper.newAnnexName)"></image>
         </swiper-item>
       </swiper>
       <view class="indicator">{{currentSwiper+1}}/{{swiperList.length}}</view>
     </view>
 
     <view style="background-color:white;"
-          v-if="userInfObj.role == enumWxUserRoleType.STAFF.code">
+          v-if="userInfObj.role == enumWxUserRoleType.STAFF.code && switch2Show">
       <view style="display:flex; justify-content:center">
         <u-upload ref="uSwipeUpload"
                   :action="uploadAction"
@@ -312,7 +316,7 @@
       <view class="title">———— 商品详情 ————</view>
       <!-- {{enumWxUserRoleType.STAFF.code}} -->
       <view style="background-color:white;"
-            v-if="userInfObj.role == enumWxUserRoleType.STAFF.code">
+            v-if="userInfObj.role == enumWxUserRoleType.STAFF.code && switch2Show">
         <view style="display:flex; justify-content:center">
           <u-upload ref="uUpload"
                     :action="uploadAction"
@@ -412,7 +416,9 @@ export default {
       swipePhotoList: [],
       coverPhotoList: [],
       headerObj: { 'X-Access-Token': Util.getToken() },
-      showConfirmModal: false
+      showConfirmModal: false,
+			switchChange: true,
+			switch2Show: false
     }
   },
   onLoad (option) {
@@ -426,6 +432,7 @@ export default {
     // #endif
     //option为object类型，会序列化上个页面传递的参数
     // console.log(option.cid); //打印出上个页面传递的参数。
+		this.getCurrentUserPhotoAllow()
   },
   onUnload () {
     this.addOrCancelFavoritesItem()
@@ -864,7 +871,27 @@ export default {
         return false;
       }
       return true;
-    }
+    },
+		uSwitchChange(key){
+			let that = this
+			if (key == false){
+				uni.showModal({
+					content:"是否要关闭拍照模式",
+					success(res) {
+						if(res.confirm){
+							that.switch2Show = false
+							Util.setCurrentUserPhotoAllow(false)
+						} else {
+							that.switchChange = true
+						}
+					}
+				})
+			}
+		},
+		getCurrentUserPhotoAllow(){
+			// this.switch2Show = Util.getCurrentUserPhotoAllow()
+			this.switch2Show = true
+		}
   }
 };
 </script>

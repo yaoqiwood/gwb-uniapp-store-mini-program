@@ -119,6 +119,12 @@ const util = {
 		uni.reLaunch({
 			'url': url
 		})
+	},
+	setCurrentUserPhotoAllow(allow){
+		this.setSession("currentUserPhotoAllow", allow)
+	},
+	getCurrentUserPhotoAllow(){
+		return this.getSession("currentUserPhotoAllow")
 	}
 }
 

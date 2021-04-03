@@ -32,6 +32,7 @@ export default {
       title: '正在登录......',
       mask: true
     })
+		this.initAllowPhoto()
     SystemApi.checkLoginStatus().then(resp => {
       if (resp.status) {
 				// console.log(option)
@@ -55,7 +56,10 @@ export default {
       SystemApi.getWxUserInf().then(resp => {
         Util.setCurrentUserInf(resp)
       })
-    }
+    },
+		initAllowPhoto(){
+			Util.setCurrentUserPhotoAllow(false)
+		}
   }
 }
 </script>
