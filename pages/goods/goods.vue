@@ -1,6 +1,6 @@
 <template>
   <view>
-    <view v-if="userInfObj.role == enumWxUserRoleType.STAFF.code && switch2Show">
+    <view v-if="userInfObj.role == enumWxUserRoleType.STAFF.code && switch2Show && false">
       <view style="display:flex; justify-content:center">
         <u-upload ref="goodsCoverUpload"
                   :action="uploadAction"
@@ -14,7 +14,7 @@
                   :header="headerObj" />
       </view>
       <view style="display:flex;justify-content:center"
-            v-if="coverPhotoList.length > 0">
+            v-if="coverPhotoList.length > 0 && false">
         <u-button type="success"
                   @click="uploadCoverPhotos"
                   size="medium">上传照片</u-button>
@@ -216,8 +216,8 @@
               @change="swiperChange">
         <swiper-item v-for="swiper in swiperList"
                      :key="swiper.saciId">
-          <image  mode="widthFix"
-									:src="getMinioImg(swiper.storagePath,swiper.newAnnexName)"></image>
+          <image  mode="heightFix" 
+		          :src="getMinioImg(swiper.storagePath,swiper.newAnnexName)"></image>
         </swiper-item>
       </swiper>
       <view class="indicator">{{currentSwiper+1}}/{{swiperList.length}}</view>
@@ -890,7 +890,7 @@ export default {
 		},
 		getCurrentUserPhotoAllow(){
 			// this.switch2Show = Util.getCurrentUserPhotoAllow()
-			this.switch2Show = true
+			this.switch2Show = false
 		}
   }
 };
