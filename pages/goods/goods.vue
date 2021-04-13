@@ -98,7 +98,7 @@
       </view>
     </view>
     <!-- share弹窗 -->
-    <view class="share"
+    <!-- <view class="share"
           :class="shareClass"
           @touchmove.stop.prevent="discard"
           @tap="hideShare">
@@ -138,7 +138,7 @@
         </view>
       </view>
 
-    </view>
+    </view> -->
     <!-- 服务-模态层弹窗 -->
     <view class="popup service"
           :class="serviceClass"
@@ -181,7 +181,7 @@
                   :key="index">{{item}}</view>
           </view>
           <view class="length">
-            <view class="text">数量</view>
+            <view class="text">数量<view style="display: inline-block;color: #9f9f9f; padding-left: 5px; font-size: 15px;">&nbsp;库存：{{goodsData.qty}}</view></view>
             <view class="number">
               <view class="sub"
                     @tap.stop="sub">
@@ -216,7 +216,7 @@
               @change="swiperChange">
         <swiper-item v-for="swiper in swiperList"
                      :key="swiper.saciId">
-          <image  mode="heightFix" 
+          <image  mode="aspectFit" 
 		          :src="getMinioImg(swiper.storagePath,swiper.newAnnexName)"></image>
         </swiper-item>
       </swiper>
@@ -251,6 +251,9 @@
       <view class="title">
         {{goodsData.name}}
       </view>
+	  <view class="title" style="font-size: 11px;">
+		库存：{{goodsData.qty}}
+	  </view>
     </view>
     <!-- 服务-规则选择 -->
     <view class="info-box spec">
@@ -396,7 +399,6 @@ export default {
         number: 1,
         service: [
           { name: "正品保证", description: "此商品官方保证为正品" },
-          { name: "极速退款", description: "此商品享受退货极速退款服务" },
           { name: "7天退换", description: "此商品享受7天无理由退换服务" }
         ],
         spec: [],
@@ -501,6 +503,7 @@ export default {
       if (!this.checkPhoneNum()) {
         return;
       }
+			// if (this.goodsData.)
       this.confirmType = ENUM_CONFIRM_TYPE.CART.code
       if (this.selectSpec == null) {
         return this.showSpec(() => {
@@ -534,6 +537,13 @@ export default {
     },
     //跳转确认订单页面
     toConfirmation () {
+			if (this.goodsData.number > this.goodsData.qty){
+				this.$refs['uToast'].show({
+				  title: '订购数量超过库存限制',
+				  type: 'error'
+				})
+				return;
+			}
       // if (!Util.getCurrentUserInf().phoneNum) {
       //   this.$refs['wxUserPhoneModal'].openModal()
       //   this.hidePop()
@@ -631,15 +641,9 @@ export default {
         this.specClass = 'none'
       }, 200)
     },
-    //关闭规格弹窗
+    
     hideSpec () {
-      this.specClass = 'hide';
-      //回调
-      this.selectSpec && this.specCallback && this.specCallback();
-      this.specCallback = false;
-      setTimeout(() => {
-        this.specClass = 'none';
-      }, 200);
+			
 
       let sw = true
       let repeatJSON = Util.getShoppingCartInf()
@@ -652,12 +656,22 @@ export default {
         return
       }
       // console.log(repeatJSON)
+			let sum = parseInt(this.goodsData.number)
       repeatJSON.forEach(element => {
         if (element.id == this.goodsData.id) {
-          element.number += this.goodsData.number
+					sum += parseInt(element.number) 
+          element.number =  sum
           sw = false
         }
       })
+			if (sum > this.goodsData.qty){
+				this.$refs['uToast'].show({
+				  title: '提交失败,购物车数量超过库存',
+				  type: 'error'
+				})
+				return  
+			}
+			
       if (sw) {
         repeatJSON.push(this.goodsData)
       }
@@ -666,6 +680,15 @@ export default {
         title: '添加购物车成功',
         duration: 1000
       })
+			
+			//关闭规格弹窗
+			this.specClass = 'hide';
+			//回调
+			this.selectSpec && this.specCallback && this.specCallback();
+			this.specCallback = false;
+			setTimeout(() => {
+			  this.specClass = 'none';
+			}, 200);
     },
     discard () {
       //丢弃
@@ -680,9 +703,9 @@ export default {
           id: resp.ptypeid,
           name: resp.pfullname,
           price: resp.price,
+					qty: resp.qty,
           service: [
             { name: "正品保证", description: "此商品官方保证为正品" },
-            { name: "极速退款", description: "此商品享受退货极速退款服务" },
             { name: "7天退换", description: "此商品享受7天无理由退换服务" }
           ],
           spec: '',

@@ -98,6 +98,7 @@
 import Util from '@/util/Util'
 import { ENUM_STATUS } from '@/util/Constants'
 import AccountLoginModal from '../../widgets/AccountLoginModal'
+import GoodsStocksApi from '@/api/goodsStocks/GoodsStocks'
 export default {
   data () {
     return {
@@ -261,8 +262,6 @@ export default {
         return;
       }
       // 检查登录状态
-
-
       uni.setStorage({
         key: 'buylist',
         data: tmpList,
@@ -341,11 +340,14 @@ export default {
       }
       this.goodsList[index].number--;
       this.sum();
+			Util.setShopingCartInf(this.goodsList)
     },
     // 增加数量
     add (index) {
       this.goodsList[index].number++;
       this.sum();
+			Util.setShopingCartInf(this.goodsList)
+			console.log(this.goodsList)
     },
     // 合计
     sum (e, index) {
