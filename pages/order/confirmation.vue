@@ -325,6 +325,14 @@ export default {
         params.userName = this.recinfo.userName
         params.userRemark = this.note
         OrderApi.confirmOrder(params).then(resp => {
+					let itemList = params.mallOrderItemList.map(item=> item.ptypeId)
+					let tempList = Util.getShoppingCartInf()
+					let cartList = Util.getShoppingCartInf().map(item=> item.id)
+					itemList.forEach(item=> {
+						let index = cartList.indexOf(item)
+						tempList.splice(index, 1)
+					})
+					Util.setShoppingCartInf(tempList)
           resolve(resp)
         })
       })

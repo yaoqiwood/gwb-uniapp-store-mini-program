@@ -1,7 +1,7 @@
 <template>
   <view>
-    <image style="position:absolute;left:50%;top:50%;transform: translate(-50%,-50%);"
-           src="/static/img/gwb-img/default_avatar_back.png"></image>
+   <!-- <image style="position:absolute;left:50%;top:50%;transform: translate(-50%,-50%);"
+           src="/static/img/gwb-img/default_avatar_back.png"></image> -->
     <!-- <view class="loadEffect">
       <text></text>
       <text></text>

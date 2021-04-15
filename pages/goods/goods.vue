@@ -673,9 +673,9 @@ export default {
 			}
 			
       if (sw) {
-        repeatJSON.push(this.goodsData)
+        repeatJSON.unshift(this.goodsData)
       }
-      Util.setShopingCartInf(repeatJSON)
+      Util.setShoppingCartInf(repeatJSON)
       uni.showToast({
         title: '添加购物车成功',
         duration: 1000

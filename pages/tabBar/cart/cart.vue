@@ -1,410 +1,447 @@
 <template>
-  <view>
-    <view v-if="showHeader"
-          class="status"
-          :style="{position:headerPosition,top:statusTop}"></view>
-    <view v-if="showHeader"
-          class="header"
-          :style="{position:headerPosition,top:headerTop}">
-      <view class="title">购物车</view>
-    </view>
-    <!-- 占位 -->
-    <view v-if="showHeader"
-          class="place"></view>
-    <!-- 商品列表 -->
-    <view class="goods-list">
-      <view class="tis"
-            v-if="goodsList.length==0">购物车是空的哦~</view>
-      <view class="row"
-            v-for="(row,index) in goodsList"
-            :key="index">
-        <!-- 删除按钮 -->
-        <view class="menu"
-              @tap.stop="deleteGoods(row.id)">
-          <view class="icon shanchu"></view>
-        </view>
-        <!-- 商品 -->
-        <view class="carrier"
-              :class="[theIndex==index?'open':oldIndex==index?'close':'']"
-              @touchstart="touchStart(index,$event)"
-              @touchmove="touchMove(index,$event)"
-              @touchend="touchEnd(index,$event)">
-          <!-- checkbox -->
-          <view class="checkbox-box"
-                @tap="selected(index)">
-            <view class="checkbox">
-              <view :class="[row.selected?'on':'']"></view>
-            </view>
-          </view>
-          <!-- 商品信息 -->
-          <view class="goods-info"
-                @tap="toGoods(row)">
-            <view class="img">
-              <image mode="aspectFit"
-                     :src="row.imgUrl"></image>
-            </view>
-            <view class="info">
-              <view class="title">{{row.name}}</view>
-              <!-- <view class="spec">{{row.spec}}</view> -->
-              <view class="price-number">
-                <view class="price">￥{{row.price}}</view>
-                <view class="number">
-                  <view class="sub"
-                        @tap.stop="sub(index)">
-                    <view class="icon jian"></view>
-                  </view>
-                  <view class="input"
-                        @tap.stop="discard">
-                    <input type="number"
-                           v-model="row.number"
-                           @input="sum($event,index)" />
-                  </view>
-                  <view class="add"
-                        @tap.stop="add(index)">
-                    <view class="icon jia"></view>
-                  </view>
-                </view>
-              </view>
-            </view>
-          </view>
-        </view>
-      </view>
-    </view>
-    <!-- 脚部菜单 -->
-    <view class="footer"
-          :style="{bottom:footerbottom}">
-      <view class="checkbox-box"
-            @tap="allSelect">
-        <view class="checkbox">
-          <view :class="[isAllselected?'on':'']"></view>
-        </view>
-        <view class="text">全选</view>
-      </view>
-      <view class="delBtn"
-            @tap="deleteList"
-            v-if="selectedList.length>0">删除</view>
-      <view class="settlement">
-        <view class="sum">合计:<view class="money">￥{{sumPrice}}</view>
-        </view>
-        <view class="btn"
-              @tap="toConfirmation">结算({{selectedList.length}})</view>
-      </view>
-    </view>
-    <account-login-modal ref="accountLoginModal" />
-  </view>
+	<view>
+		<view v-if="showHeader" class="status" :style="{position:headerPosition,top:statusTop}"></view>
+		<view v-if="showHeader" class="header" :style="{position:headerPosition,top:headerTop}">
+			<view class="title">购物车</view>
+		</view>
+		<!-- 占位 -->
+		<view v-if="showHeader" class="place"></view>
+		<!-- 商品列表 -->
+		<view class="goods-list">
+			<view class="tis" v-if="goodsList.length==0">购物车是空的哦~</view>
+			<view class="row" v-for="(row,index) in goodsList" :key="index">
+				<!-- 删除按钮 -->
+				<view class="menu" @tap.stop="deleteGoods(row.id)">
+					<view class="icon shanchu"></view>
+				</view>
+				<!-- 商品 -->
+				<view class="carrier" :class="[theIndex==index?'open':oldIndex==index?'close':'']"
+					@touchstart="touchStart(index,$event)" @touchmove="touchMove(index,$event)"
+					@touchend="touchEnd(index,$event)">
+					<!-- checkbox -->
+					<view class="checkbox-box" @tap="selected(index)">
+						<view class="checkbox">
+							<view :class="[row.selected?'on':'']"></view>
+						</view>
+					</view>
+					<!-- 商品信息 -->
+					<view class="goods-info" @tap="toGoods(row)">
+						<view class="img">
+							<image mode="aspectFit" :src="row.imgUrl"></image>
+						</view>
+						<view class="info">
+							<view class="title">{{row.name}}</view>
+							<!-- <view class="spec">{{row.spec}}</view> -->
+							<view class="price-number">
+								<view class="price">￥{{row.price}}</view>
+								<view class="number">
+									<view class="sub" @tap.stop="sub(index)">
+										<view class="icon jian"></view>
+									</view>
+									<view class="input" @tap.stop="discard">
+										<input type="number" v-model="row.number" @input="sum($event,index)"
+											@blur="onInputBlur" />
+									</view>
+									<view class="add" @tap.stop="add(index)">
+										<view class="icon jia"></view>
+									</view>
+								</view>
+							</view>
+						</view>
+					</view>
+				</view>
+			</view>
+		</view>
+		<!-- 脚部菜单 -->
+		<view class="footer" :style="{bottom:footerbottom}">
+			<view class="checkbox-box" @tap="allSelect">
+				<view class="checkbox">
+					<view :class="[isAllselected?'on':'']"></view>
+				</view>
+				<view class="text">全选</view>
+			</view>
+			<view class="delBtn" @tap="deleteList" v-if="selectedList.length>0">删除</view>
+			<view class="settlement">
+				<view class="sum">合计:<view class="money">￥{{sumPrice}}</view>
+				</view>
+				<view class="btn" @tap="toConfirmation">结算({{selectedList.length}})</view>
+			</view>
+		</view>
+		<account-login-modal ref="accountLoginModal" />
+		<u-toast ref="uToast" />
+	</view>
 </template>
 
 <script>
-import Util from '@/util/Util'
-import { ENUM_STATUS } from '@/util/Constants'
-import AccountLoginModal from '../../widgets/AccountLoginModal'
-import GoodsStocksApi from '@/api/goodsStocks/GoodsStocks'
-export default {
-  data () {
-    return {
-      sumPrice: '0.00',
-      headerPosition: "fixed",
-      headerTop: null,
-      statusTop: null,
-      showHeader: true,
-      selectedList: [],
-      isAllselected: false,
-      goodsList: [
-        // {id:1,img:'/static/img/goods/p1.jpg',name:'商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题',spec:'规格:S码',price:127.5,number:1,selected:false},
-        // {id:2,img:'/static/img/goods/p2.jpg',name:'商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题',spec:'规格:S码',price:127.5,number:1,selected:false},
-        // {id:3,img:'/static/img/goods/p3.jpg',name:'商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题',spec:'规格:S码',price:127.5,number:1,selected:false},
-        // {id:4,img:'/static/img/goods/p4.jpg',name:'商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题',spec:'规格:S码',price:127.5,number:1,selected:false},
-        // {id:5,img:'/static/img/goods/p5.jpg',name:'商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题',spec:'规格:S码',price:127.5,number:1,selected:false}
-      ],
-      //控制滑动效果
-      theIndex: null,
-      oldIndex: null,
-      isStop: false
-    }
-  },
-  onPageScroll (e) {
-    //兼容iOS端下拉时顶部漂移
-    this.headerPosition = e.scrollTop >= 0 ? "fixed" : "absolute";
-    this.headerTop = e.scrollTop >= 0 ? null : 0;
-    this.statusTop = e.scrollTop >= 0 ? null : -this.statusHeight + 'px';
-  },
-	// onShareAppMessage(res) {
-	// 	return {
-	// 		title: '广挖宝',
-	// 		path: '/pages/blank/LoginBlank'
-	// 	}
-	// },
-  //下拉刷新，需要自己在page.json文件中配置开启页面下拉刷新 "enablePullDownRefresh": true
-  onPullDownRefresh () {
-    setTimeout(function () {
-      uni.stopPullDownRefresh();
-    }, 1000);
-  },
-  onLoad () {
-    //兼容H5下结算条位置
-    // #ifdef H5
-    this.footerbottom = document.getElementsByTagName('uni-tabbar')[0].offsetHeight + 'px';
-    // #endif
-    // #ifdef APP-PLUS
-    this.showHeader = false;
-    this.statusHeight = plus.navigator.getStatusbarHeight();
-    // #endif
-  },
-  onShow () {
-    this.getCartInf()
-  },
-  onHide () {
-    // this.setCartInf()
-  },
-  methods: {
-    //加入商品 参数 goods:商品数据
-    joinGoods (goods) {
-      /*
-      * 这里只是展示一种添加逻辑，模板并没有做从其他页面加入商品到购物车的具体动作，
-      * 在实际应用上，前端并不会直接插入记录到goodsList这一个动作，一般是更新列表和本地列表缓存。
-      * 一般商城购物车的增删改动作是由后端来完成的,
-      * 后端记录后返回前端更新前端缓存
-      */
-      let len = this.goodsList.length;
-      let isFind = false;//是否找到ID一样的商品
-      for (let i = 0; i < len; i++) {
-        let row = this.goodsList[i];
-        if (row.id == goods.id) {	//找到商品一样的商品
-          this.goodsList[i].number++;//数量自增
-          isFind = true;//找到一样的商品
-          break;//跳出循环
-        }
-      }
-      if (!isFind) {
-        //没有找到一样的商品，新增一行到购物车商品列表头部
-        this.goodsList[i].unshift(goods);
-      }
-    },
-    //控制左滑删除效果-begin
-    touchStart (index, event) {
-      //多点触控不触发
-      if (event.touches.length > 1) {
-        this.isStop = true;
-        return;
-      }
-      this.oldIndex = this.theIndex;
-      this.theIndex = null;
-      //初始坐标
-      this.initXY = [event.touches[0].pageX, event.touches[0].pageY];
-    },
-    touchMove (index, event) {
-      //多点触控不触发
-      if (event.touches.length > 1) {
-        this.isStop = true;
-        return;
-      }
-      let moveX = event.touches[0].pageX - this.initXY[0];
-      let moveY = event.touches[0].pageY - this.initXY[1];
+	import Util from '@/util/Util'
+	import {
+		ENUM_STATUS
+	} from '@/util/Constants'
+	import AccountLoginModal from '../../widgets/AccountLoginModal'
+	import GoodsStocksApi from '@/api/goodsStocks/GoodsStocks'
+	export default {
+		data() {
+			return {
+				sumPrice: '0.00',
+				headerPosition: "fixed",
+				headerTop: null,
+				statusTop: null,
+				showHeader: true,
+				selectedList: [],
+				isAllselected: false,
+				goodsList: [
+					// {id:1,img:'/static/img/goods/p1.jpg',name:'商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题',spec:'规格:S码',price:127.5,number:1,selected:false},
+					// {id:2,img:'/static/img/goods/p2.jpg',name:'商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题',spec:'规格:S码',price:127.5,number:1,selected:false},
+					// {id:3,img:'/static/img/goods/p3.jpg',name:'商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题',spec:'规格:S码',price:127.5,number:1,selected:false},
+					// {id:4,img:'/static/img/goods/p4.jpg',name:'商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题',spec:'规格:S码',price:127.5,number:1,selected:false},
+					// {id:5,img:'/static/img/goods/p5.jpg',name:'商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题商品标题',spec:'规格:S码',price:127.5,number:1,selected:false}
+				],
+				//控制滑动效果
+				theIndex: null,
+				oldIndex: null,
+				isStop: false
+			}
+		},
+		onPageScroll(e) {
+			//兼容iOS端下拉时顶部漂移
+			this.headerPosition = e.scrollTop >= 0 ? "fixed" : "absolute";
+			this.headerTop = e.scrollTop >= 0 ? null : 0;
+			this.statusTop = e.scrollTop >= 0 ? null : -this.statusHeight + 'px';
+		},
+		// onShareAppMessage(res) {
+		// 	return {
+		// 		title: '广挖宝',
+		// 		path: '/pages/blank/LoginBlank'
+		// 	}
+		// },
+		//下拉刷新，需要自己在page.json文件中配置开启页面下拉刷新 "enablePullDownRefresh": true
+		onPullDownRefresh() {
+			setTimeout(function() {
+				uni.stopPullDownRefresh();
+			}, 1000);
+		},
+		onLoad() {
+			//兼容H5下结算条位置
+			// #ifdef H5
+			this.footerbottom = document.getElementsByTagName('uni-tabbar')[0].offsetHeight + 'px';
+			// #endif
+			// #ifdef APP-PLUS
+			this.showHeader = false;
+			this.statusHeight = plus.navigator.getStatusbarHeight();
+			// #endif
+			// 初始化取消全选
+			this.cancelAllSelect()
+		},
+		onShow() {
+			this.getCartInf()
+			// 初始化list
+			this.selectedList = []
+			// console.log(this.selectedList)
+			let array = this.goodsList.filter(item=> item.selected).map(item=> item.id)
+			this.selectedList.push(...array)
+			// console.log(this.selectedList)
+			this.isAllselected = this.selectedList.length == this.goodsList.length;
+			this.sum()
+			// this.goodsList.forEach(item=> {
+			// 	item.selected = false
+			// })
+		},
+		onHide() {
+			this.setCartInf()
+		},
+		methods: {
+			//加入商品 参数 goods:商品数据
+			joinGoods(goods) {
+				/*
+				 * 这里只是展示一种添加逻辑，模板并没有做从其他页面加入商品到购物车的具体动作，
+				 * 在实际应用上，前端并不会直接插入记录到goodsList这一个动作，一般是更新列表和本地列表缓存。
+				 * 一般商城购物车的增删改动作是由后端来完成的,
+				 * 后端记录后返回前端更新前端缓存
+				 */
+				let len = this.goodsList.length;
+				let isFind = false; //是否找到ID一样的商品
+				for (let i = 0; i < len; i++) {
+					let row = this.goodsList[i];
+					if (row.id == goods.id) { //找到商品一样的商品
+						this.goodsList[i].number++; //数量自增
+						isFind = true; //找到一样的商品
+						break; //跳出循环
+					}
+				}
+				if (!isFind) {
+					//没有找到一样的商品，新增一行到购物车商品列表头部
+					this.goodsList[i].unshift(goods);
+				}
+			},
+			//控制左滑删除效果-begin
+			touchStart(index, event) {
+				//多点触控不触发
+				if (event.touches.length > 1) {
+					this.isStop = true;
+					return;
+				}
+				this.oldIndex = this.theIndex;
+				this.theIndex = null;
+				//初始坐标
+				this.initXY = [event.touches[0].pageX, event.touches[0].pageY];
+			},
+			touchMove(index, event) {
+				//多点触控不触发
+				if (event.touches.length > 1) {
+					this.isStop = true;
+					return;
+				}
+				let moveX = event.touches[0].pageX - this.initXY[0];
+				let moveY = event.touches[0].pageY - this.initXY[1];
 
-      if (this.isStop || Math.abs(moveX) < 5) {
-        return;
-      }
-      if (Math.abs(moveY) > Math.abs(moveX)) {
-        // 竖向滑动-不触发左滑效果
-        this.isStop = true;
-        return;
-      }
+				if (this.isStop || Math.abs(moveX) < 5) {
+					return;
+				}
+				if (Math.abs(moveY) > Math.abs(moveX)) {
+					// 竖向滑动-不触发左滑效果
+					this.isStop = true;
+					return;
+				}
 
-      if (moveX < 0) {
-        this.theIndex = index;
-        this.isStop = true;
-      } else if (moveX > 0) {
-        if (this.theIndex != null && this.oldIndex == this.theIndex) {
-          this.oldIndex = index;
-          this.theIndex = null;
-          this.isStop = true;
-          setTimeout(() => {
-            this.oldIndex = null;
-          }, 150)
-        }
-      }
-    },
-    touchEnd (index, $event) {
-      //结束禁止触发效果
-      this.isStop = false;
-    },
-    //控制左滑删除效果-end
+				if (moveX < 0) {
+					this.theIndex = index;
+					this.isStop = true;
+				} else if (moveX > 0) {
+					if (this.theIndex != null && this.oldIndex == this.theIndex) {
+						this.oldIndex = index;
+						this.theIndex = null;
+						this.isStop = true;
+						setTimeout(() => {
+							this.oldIndex = null;
+						}, 150)
+					}
+				}
+			},
+			touchEnd(index, $event) {
+				//结束禁止触发效果
+				this.isStop = false;
+			},
+			//控制左滑删除效果-end
 
-    //商品跳转
-    toGoods (e) {
-      // uni.showToast({ title: '商品' + e.id, icon: "none" });
-      uni.navigateTo({
-        url: '../../goods/goods?ptypeId=' + e.id
-      })
-    },
-    //跳转确认订单页面
-    toConfirmation () {
-      if (!this.checkPhoneNum()) {
-        return;
-      }
-      let tmpList = [];
-      let len = this.goodsList.length;
-      for (let i = 0; i < len; i++) {
-        if (this.goodsList[i].selected) {
-          this.goodsList[i].img = this.goodsList[i].imgUrl
-          tmpList.push(this.goodsList[i]);
-        }
-      }
-      if (!this.checkUserInfStatus()) {
-        return;
-      }
-
-      if (tmpList.length < 1) {
-        uni.showToast({
-          title: '请选择商品结算',
-          icon: 'none'
-        });
-        return;
-      }
-      // 检查登录状态
-      uni.setStorage({
-        key: 'buylist',
-        data: tmpList,
-        success: () => {
-          // Util.emptyShoppingCartInf()
-          let tempNewList = tmpList
-          let array = Util.getShoppingCartInf()
-          // 倒叙删除（修改）
-          // tempNewList.forEach(element => {
-          //   array.splice(this.indexOfTempList(array, element), 1)
-          //   console.log(array)
-          //   Util.setShopingCartInf(array)
-          // })
-          for (let i = tempNewList.length - 1; i >= 0; i--) {
-            array.splice(this.indexOfTempList(array, tempNewList[i]), 1)
-            Util.setShopingCartInf(array)
-          }
-          this.isAllselected = false
-          this.sumPrice = 0
-          this.selectedList = []
-          uni.navigateTo({
-            url: '../../order/confirmation'
-          })
-        }
-      })
-    },
-    //删除商品
-    deleteGoods (id) {
-      let len = this.goodsList.length;
-      for (let i = 0; i < len; i++) {
-        if (id == this.goodsList[i].id) {
-          this.goodsList.splice(i, 1);
-          break;
-        }
-      }
-      this.selectedList.splice(this.selectedList.indexOf(id), 1);
-      this.sum();
-      this.oldIndex = null;
-      this.theIndex = null;
-      Util.setShopingCartInf(this.goodsList)
-    },
-    // 删除商品
-    deleteList () {
-      let len = this.selectedList.length;
-      while (this.selectedList.length > 0) {
-        this.deleteGoods(this.selectedList[0]);
-      }
-      this.selectedList = [];
-      this.isAllselected = this.selectedList.length == this.goodsList.length && this.goodsList.length > 0;
-      this.sum();
-    },
-    // 选中商品
-    selected (index) {
-      this.goodsList[index].selected = this.goodsList[index].selected ? false : true;
-      let i = this.selectedList.indexOf(this.goodsList[index].id);
-      i > -1 ? this.selectedList.splice(i, 1) : this.selectedList.push(this.goodsList[index].id);
-      this.isAllselected = this.selectedList.length == this.goodsList.length;
-      this.sum();
-    },
-    //全选
-    allSelect () {
-      let len = this.goodsList.length;
-      let arr = [];
-      for (let i = 0; i < len; i++) {
-        this.goodsList[i].selected = this.isAllselected ? false : true;
-        arr.push(this.goodsList[i].id);
-      }
-      this.selectedList = this.isAllselected ? [] : arr;
-      this.isAllselected = this.isAllselected || this.goodsList.length == 0 ? false : true;
-      this.sum();
-    },
-    // 减少数量
-    sub (index) {
-      if (this.goodsList[index].number <= 1) {
-        return;
-      }
-      this.goodsList[index].number--;
-      this.sum();
-			Util.setShopingCartInf(this.goodsList)
-    },
-    // 增加数量
-    add (index) {
-      this.goodsList[index].number++;
-      this.sum();
-			Util.setShopingCartInf(this.goodsList)
-			console.log(this.goodsList)
-    },
-    // 合计
-    sum (e, index) {
-      this.sumPrice = 0;
-      let len = this.goodsList.length;
-      for (let i = 0; i < len; i++) {
-        if (this.goodsList[i].selected) {
-          if (e && i == index) {
-            this.sumPrice = this.sumPrice + (e.detail.value * this.goodsList[i].price);
-          } else {
-            this.sumPrice = this.sumPrice + (this.goodsList[i].number * this.goodsList[i].price);
-          }
-        }
-      }
-      this.sumPrice = this.sumPrice.toFixed(2);
-    },
-    discard () {
-      //丢弃
-    },
-    getCartInf () {
-      this.goodsList = Util.getShoppingCartInf()
-    },
-    setCartInf () {
-      Util.setShopingCartInf(this.goodsList)
-    },
-    indexOfTempList (tmpList, el) {
-      let index = 0
-      tmpList.forEach(element => {
-        if (element.id === el.id) {
-          return
-        }
-        index += 1
-      })
-      return index
-    },
-    checkUserInfStatus () {
-      if (ENUM_STATUS.NOT_OBTAINED.code === Util.getCurrentUserInf().status.trim()) {
-        this.$refs['accountLoginModal'].openModal()
-        return false
-      }
-      return true
-    },
-    checkPhoneNum () {
-      if (null === Util.getCurrentUserInf().phoneNum || Util.getCurrentUserInf().phoneNum == '') {
-        uni.navigateTo({
-          url: '../../phoneNumGetter/PhoneNumGetter'
-        })
-        return false;
-      }
-      return true;
-    }
-  },
-  components: {
-    AccountLoginModal
-  }
-}
+			//商品跳转
+			toGoods(e) {
+				// uni.showToast({ title: '商品' + e.id, icon: "none" });
+				uni.navigateTo({
+					url: '../../goods/goods?ptypeId=' + e.id
+				})
+			},
+			//跳转确认订单页面
+			toConfirmation() {
+				if (!this.checkPhoneNum()) {
+					return;
+				}
+				// 检查购物车状态并检查库存
+				if (!this.findGoodsStocksListByArray(this.goodsList)) {
+					return
+				}
+				let tmpList = [];
+				let len = this.goodsList.length;
+				for (let i = 0; i < len; i++) {
+				  if (this.goodsList[i].selected) {
+				    this.goodsList[i].img = this.goodsList[i].imgUrl
+				    tmpList.push(this.goodsList[i]);
+				  }
+				}
+				if (!this.checkUserInfStatus()) {
+				  return;
+				}
+				if (tmpList.length < 1) {
+				  uni.showToast({
+				    title: '请选择商品结算',
+				    icon: 'none'
+				  });
+				  return;
+				}
+				// 检查登录状态
+				uni.setStorage({
+				  key: 'buylist',
+				  data: tmpList,
+				  success: () => {
+				    // Util.emptyShoppingCartInf()
+				    let tempNewList = tmpList
+				    let array = Util.getShoppingCartInf()
+				    // 倒叙删除（修改）
+				    // tempNewList.forEach(element => {
+				    //   array.splice(this.indexOfTempList(array, element), 1)
+				    //   console.log(array)
+				    //   Util.setShoppingCartInf(array)
+				    // })
+				    for (let i = tempNewList.length - 1; i >= 0; i--) {
+				      array.splice(this.indexOfTempList(array, tempNewList[i]), 1)
+				      Util.setShoppingCartInf(array)
+				    }
+				    this.isAllselected = false
+				    this.sumPrice = 0
+				    this.selectedList = []
+				    uni.navigateTo({
+				      url: '../../order/confirmation'
+				    })
+				  }
+				})
+			},
+			//删除商品
+			deleteGoods(id) {
+				let len = this.goodsList.length;
+				for (let i = 0; i < len; i++) {
+					if (id == this.goodsList[i].id) {
+						this.goodsList.splice(i, 1);
+						break;
+					}
+				}
+				this.selectedList.splice(this.selectedList.indexOf(id), 1);
+				this.sum();
+				this.oldIndex = null;
+				this.theIndex = null;
+				Util.setShoppingCartInf(this.goodsList)
+			},
+			// 删除商品
+			deleteList() {
+				let len = this.selectedList.length;
+				while (this.selectedList.length > 0) {
+					this.deleteGoods(this.selectedList[0]);
+				}
+				this.selectedList = [];
+				this.isAllselected = this.selectedList.length == this.goodsList.length && this.goodsList.length > 0;
+				this.sum();
+			},
+			// 选中商品
+			selected(index) {
+				this.goodsList[index].selected = this.goodsList[index].selected ? false : true;
+				let i = this.selectedList.indexOf(this.goodsList[index].id);
+				i > -1 ? this.selectedList.splice(i, 1) : this.selectedList.push(this.goodsList[index].id);
+				this.isAllselected = this.selectedList.length == this.goodsList.length;
+				// console.log(this.selectedList.length)
+				this.sum();
+			},
+			//全选
+			allSelect() {
+				let len = this.goodsList.length;
+				let arr = [];
+				for (let i = 0; i < len; i++) {
+					this.goodsList[i].selected = this.isAllselected ? false : true;
+					arr.push(this.goodsList[i].id);
+				}
+				this.selectedList = this.isAllselected ? [] : arr;
+				this.isAllselected = this.isAllselected || this.goodsList.length == 0 ? false : true;
+				this.sum();
+			},
+			cancelAllSelect() {
+				let goodsList = Util.getShoppingCartInf()
+				goodsList.forEach(item => {
+					item.selected = false
+				})
+				Util.setShoppingCartInf(goodsList)
+				this.isAllselected = false
+				this.sum()
+			},
+			// 减少数量
+			sub(index) {
+				if (this.goodsList[index].number <= 1) {
+					return;
+				}
+				this.goodsList[index].number--;
+				this.sum();
+				Util.setShoppingCartInf(this.goodsList)
+			},
+			// 增加数量
+			add(index) {
+				this.goodsList[index].number++;
+				this.sum();
+				Util.setShoppingCartInf(this.goodsList)
+			},
+			// 合计
+			sum(e, index) {
+				this.sumPrice = 0;
+				let len = this.goodsList.length;
+				for (let i = 0; i < len; i++) {
+					if (this.goodsList[i].selected) {
+						if (e && i == index) {
+							this.sumPrice = this.sumPrice + (e.detail.value * this.goodsList[i].price);
+						} else {
+							this.sumPrice = this.sumPrice + (this.goodsList[i].number * this.goodsList[i].price);
+						}
+					}
+				}
+				this.sumPrice = this.sumPrice.toFixed(2);
+			},
+			discard() {
+				//丢弃
+			},
+			getCartInf() {
+				this.goodsList = Util.getShoppingCartInf()
+			},
+			setCartInf() {
+				Util.setShoppingCartInf(this.goodsList)
+			},
+			indexOfTempList(tmpList, el) {
+				let index = 0
+				tmpList.forEach(element => {
+					if (element.id === el.id) {
+						return
+					}
+					index += 1
+				})
+				return index
+			},
+			checkUserInfStatus() {
+				if (ENUM_STATUS.NOT_OBTAINED.code === Util.getCurrentUserInf().status.trim()) {
+					this.$refs['accountLoginModal'].openModal()
+					return false
+				}
+				return true
+			},
+			checkPhoneNum() {
+				if (null === Util.getCurrentUserInf().phoneNum || Util.getCurrentUserInf().phoneNum == '') {
+					uni.navigateTo({
+						url: '../../phoneNumGetter/PhoneNumGetter'
+					})
+					return false;
+				}
+				return true;
+			},
+			findGoodsStocksListByArray(params) {
+				let paramsList = params.filter(item => item.selected == true)
+				if (paramsList.length == 0) {
+					this.$refs['uToast'].show({
+						title: '请选择购物车商品后进行结算',
+						type: 'error'
+					})
+					return false
+				}
+				let paramsMapList = paramsList.map(item => {
+					return item.id
+				})
+				GoodsStocksApi.findGoodsStocksListByArray(JSON.stringify(paramsMapList)).then(resp => {
+					paramsList.forEach(item => {
+						let temp = resp.filter(stocks => item.id == stocks.ptypeid)[0]
+						// console.log(item)
+						if (temp.qty < item.number) {
+							this.$refs['uToast'].show({
+								title: '购物车选购的商品数量大于库存数量',
+								type: 'warning',
+								duration: 2000
+							})
+							return false
+						}
+					})
+				})
+				return true
+			},
+			// 当数量框输入失去焦点时的回调
+			onInputBlur() {
+				Util.setShoppingCartInf(this.goodsList)
+			}
+		},
+		components: {
+			AccountLoginModal
+		}
+	}
 </script>
 <style lang="scss">
-@import "./css/Cart";
+	@import "./css/Cart";
 </style>
