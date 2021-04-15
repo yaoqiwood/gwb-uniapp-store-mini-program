@@ -26,7 +26,7 @@ const util = {
 	getCurrentUserInf () {
 		return this.getSession("currentUserInf")
 	},
-	setShopingCartInf (params) {
+	setShoppingCartInf (params) {
 		this.setSession("shoppingCart", JSON.stringify(params))
 	},
 	emptyShoppingCartInf () {
