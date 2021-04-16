@@ -171,11 +171,11 @@ export default {
     }
   },
   //下拉刷新，需要自己在page.json文件中配置开启页面下拉刷新 "enablePullDownRefresh": true
-  onPullDownRefresh () {
-    setTimeout(function () {
-      uni.stopPullDownRefresh();
-    }, 1000);
-  },
+  // onPullDownRefresh () {
+  //   setTimeout(function () {
+  //     uni.stopPullDownRefresh();
+  //   }, 1000);
+  // },
   onPageScroll (e) {
     //兼容iOS端下拉时顶部漂移
     this.headerPosition = e.scrollTop >= 0 ? "fixed" : "absolute";

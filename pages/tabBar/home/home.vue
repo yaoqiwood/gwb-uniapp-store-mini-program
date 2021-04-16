@@ -253,7 +253,8 @@ export default {
   },
   //下拉刷新，需要自己在page.json文件中配置开启页面下拉刷新 "enablePullDownRefresh": true
   onPullDownRefresh () {
-    setTimeout(function () {
+		this.refreshPage()
+		setTimeout(() => {
       uni.stopPullDownRefresh();
     }, 1000)
   },
@@ -309,9 +310,9 @@ export default {
     // 定位
     this.loadLocation()
     //开启定时器
-    this.Timer()
+    // this.Timer()
     //加载活动专区
-    this.loadPromotion()
+    // this.loadPromotion()
     // 加载list
     this.getSwipeImgList()
     // 加载热门商品
@@ -589,6 +590,21 @@ export default {
 					title: '开启成功'
 				})
 			}
+		},
+		refreshPage() {
+			this.swiperList = []
+			this.hotItemArray = []
+			this.productList = []
+			// 定位
+			this.loadLocation()
+			// 加载list
+			this.getSwipeImgList()
+			// 加载热门商品
+			this.getGoodStocksSaleTopThree()
+			// 加载商品列表
+			this.getCountAndStocksList()
+			// 加载用户信息
+			this.reNewUserInf()
 		}
   },
   computed: {

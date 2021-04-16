@@ -52,7 +52,7 @@
     {
       "path": "pages/tabBar/cart/cart",
       "style": {
-        "enablePullDownRefresh": true,
+        "enablePullDownRefresh": false,
         "navigationBarTextStyle": "black",
         "app-plus": {
           "titleNView": false,
@@ -71,7 +71,7 @@
     {
       "path": "pages/tabBar/user/user",
       "style": {
-        "enablePullDownRefresh": true,
+        "enablePullDownRefresh": false,
         "backgroundTextStyle": "light",
         //        "navigationBarBackgroundColor": "#f06c7a",
         "navigationBarBackgroundColor": "#FF3E3E",
@@ -96,7 +96,7 @@
       "path": "pages/goods/goods-list/goods-list",
       "style": {
         "navigationBarTitleText": "商品列表",
-        "enablePullDownRefresh": true,
+        "enablePullDownRefresh": false,
         // "app-plus": {
         //   "bounce": "none"
         // }

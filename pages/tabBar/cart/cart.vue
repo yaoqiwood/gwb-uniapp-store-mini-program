@@ -128,7 +128,7 @@
 			// #ifdef APP-PLUS
 			this.showHeader = false;
 			this.statusHeight = plus.navigator.getStatusbarHeight();
-			// #endif
+			// #endif 
 			// 初始化取消全选
 			this.cancelAllSelect()
 		},
